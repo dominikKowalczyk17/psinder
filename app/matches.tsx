@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
-import { Colors, Spacing, Typography } from '@/constants/Theme';
+import { Spacing, Typography } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -61,22 +62,23 @@ const recentMatches = [
 ];
 
 export default function MatchesScreen() {
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<'messages' | 'matches'>('matches');
 
   const renderMatch = ({ item }: { item: typeof recentMatches[0] }) => (
     <TouchableOpacity style={styles.recentMatchItem}>
       <Image source={{ uri: item.image }} style={styles.recentMatchImage} />
-      <View style={[styles.matchBadge, { backgroundColor: Colors.success }]}>
-        <ThemedText style={[styles.matchBadgeText, { color: Colors.text.inverse }]}>NEW</ThemedText>
+      <View style={[styles.matchBadge, { backgroundColor: theme.success }]}>
+        <ThemedText style={[styles.matchBadgeText, { color: theme.text.inverse }]}>NEW</ThemedText>
       </View>
-      <ThemedText style={[styles.recentMatchName, { color: Colors.text.primary }]}>{item.dogName}</ThemedText>
-      <ThemedText style={[styles.recentMatchTime, { color: Colors.text.quaternary }]}>{item.matchTime}</ThemedText>
+      <ThemedText style={[styles.recentMatchName, { color: theme.text.primary }]}>{item.dogName}</ThemedText>
+      <ThemedText style={[styles.recentMatchTime, { color: theme.text.quaternary }]}>{item.matchTime}</ThemedText>
     </TouchableOpacity>
   );
 
   const renderMessage = ({ item }: { item: typeof mockMatches[0] }) => (
     <TouchableOpacity 
-      style={[styles.messageItem, { borderBottomColor: Colors.border.light }]}
+      style={[styles.messageItem, { borderBottomColor: theme.border.light }]}
       onPress={() => {
         // Navigate to chat screen (to be implemented)
         console.log('Navigate to chat with', item.ownerName);
@@ -84,21 +86,21 @@ export default function MatchesScreen() {
     >
       <View style={styles.messageImageContainer}>
         <Image source={{ uri: item.image }} style={styles.messageImage} />
-        {item.unread && <View style={[styles.unreadIndicator, { backgroundColor: Colors.primary }]} />}
+        {item.unread && <View style={[styles.unreadIndicator, { backgroundColor: theme.primary }]} />}
       </View>
       
       <View style={styles.messageContent}>
         <View style={styles.messageHeader}>
-          <ThemedText style={[styles.messageName, { color: Colors.text.primary }]}>
+          <ThemedText style={[styles.messageName, { color: theme.text.primary }]}>
             {item.dogName} & {item.ownerName}
           </ThemedText>
-          <ThemedText style={[styles.messageTime, { color: Colors.text.quaternary }]}>{item.timestamp}</ThemedText>
+          <ThemedText style={[styles.messageTime, { color: theme.text.quaternary }]}>{item.timestamp}</ThemedText>
         </View>
         <ThemedText 
           style={[
             styles.messageText,
-            { color: Colors.text.tertiary },
-            item.unread && [styles.messageTextUnread, { color: Colors.text.secondary }]
+            { color: theme.text.tertiary },
+            item.unread && [styles.messageTextUnread, { color: theme.text.secondary }]
           ]}
           numberOfLines={1}
         >
@@ -109,13 +111,13 @@ export default function MatchesScreen() {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={24} color={Colors.primary} />
+          <FontAwesome name="arrow-left" size={24} color={theme.primary} />
         </TouchableOpacity>
-        <ThemedText style={[styles.headerTitle, { color: Colors.primary }]}>
+        <ThemedText style={[styles.headerTitle, { color: theme.primary }]}>
           Matches
         </ThemedText>
         <View style={styles.headerRight} />
@@ -124,25 +126,33 @@ export default function MatchesScreen() {
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'matches' && [styles.activeTab, { backgroundColor: Colors.primary }]]}
+          style={[
+            styles.tab, 
+            { backgroundColor: theme.primarySubtle },
+            activeTab === 'matches' && [styles.activeTab, { backgroundColor: theme.primary }]
+          ]}
           onPress={() => setActiveTab('matches')}
         >
           <ThemedText style={[
             styles.tabText,
-            { color: Colors.text.secondary },
-            activeTab === 'matches' && [styles.activeTabText, { color: Colors.text.inverse }]
+            { color: theme.text.secondary },
+            activeTab === 'matches' && [styles.activeTabText, { color: theme.text.inverse }]
           ]}>
             New Matches ({recentMatches.length})
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'messages' && [styles.activeTab, { backgroundColor: Colors.primary }]]}
+          style={[
+            styles.tab, 
+            { backgroundColor: theme.primarySubtle },
+            activeTab === 'messages' && [styles.activeTab, { backgroundColor: theme.primary }]
+          ]}
           onPress={() => setActiveTab('messages')}
         >
           <ThemedText style={[
             styles.tabText,
-            { color: Colors.text.secondary },
-            activeTab === 'messages' && [styles.activeTabText, { color: Colors.text.inverse }]
+            { color: theme.text.secondary },
+            activeTab === 'messages' && [styles.activeTabText, { color: theme.text.inverse }]
           ]}>
             Messages ({mockMatches.filter(m => m.unread).length})
           </ThemedText>
@@ -155,10 +165,10 @@ export default function MatchesScreen() {
           {recentMatches.length > 0 ? (
             <>
               <View style={styles.sectionHeader}>
-                <ThemedText style={[styles.sectionTitle, { color: Colors.text.primary }]}>
+                <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>
                   🎉 New Walking Buddies!
                 </ThemedText>
-                <ThemedText style={[styles.sectionSubtitle, { color: Colors.text.tertiary }]}>
+                <ThemedText style={[styles.sectionSubtitle, { color: theme.text.tertiary }]}>
                   Send a message to start planning your walk
                 </ThemedText>
               </View>
@@ -174,15 +184,15 @@ export default function MatchesScreen() {
           ) : (
             <View style={styles.emptyState}>
               <ThemedText style={styles.emptyStateEmoji}>🐕</ThemedText>
-              <ThemedText style={[styles.emptyStateTitle, { color: Colors.text.primary }]}>No matches yet</ThemedText>
-              <ThemedText style={[styles.emptyStateText, { color: Colors.text.tertiary }]}>
+              <ThemedText style={[styles.emptyStateTitle, { color: theme.text.primary }]}>No matches yet</ThemedText>
+              <ThemedText style={[styles.emptyStateText, { color: theme.text.tertiary }]}>
                 Keep swiping to find the perfect walking buddy for your dog!
               </ThemedText>
               <TouchableOpacity 
-                style={[styles.backToSwipingButton, { backgroundColor: Colors.primary }]}
+                style={[styles.backToSwipingButton, { backgroundColor: theme.primary }]}
                 onPress={() => router.push('/home')}
               >
-                <ThemedText style={[styles.backToSwipingText, { color: Colors.text.inverse }]}>Back to Swiping</ThemedText>
+                <ThemedText style={[styles.backToSwipingText, { color: theme.text.inverse }]}>Back to Swiping</ThemedText>
               </TouchableOpacity>
             </View>
           )}
@@ -199,8 +209,8 @@ export default function MatchesScreen() {
           ) : (
             <View style={styles.emptyState}>
               <ThemedText style={styles.emptyStateEmoji}>💬</ThemedText>
-              <ThemedText style={[styles.emptyStateTitle, { color: Colors.text.primary }]}>No messages yet</ThemedText>
-              <ThemedText style={[styles.emptyStateText, { color: Colors.text.tertiary }]}>
+              <ThemedText style={[styles.emptyStateTitle, { color: theme.text.primary }]}>No messages yet</ThemedText>
+              <ThemedText style={[styles.emptyStateText, { color: theme.text.tertiary }]}>
                 Start a conversation with your matches to plan a walk!
               </ThemedText>
             </View>
@@ -225,7 +235,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     fontSize: Typography.fontSize.xxl,
-    color: Colors.primary,
+    // color applied inline with theme
   },
   headerTitle: {
     fontSize: Typography.fontSize.xxl,
@@ -245,10 +255,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     borderRadius: 20,
     marginHorizontal: Spacing.xs,
-    backgroundColor: Colors.primarySubtle,
+    // backgroundColor applied inline with theme
   },
   activeTab: {
-    backgroundColor: Colors.primary,
+    // backgroundColor applied inline with theme
   },
   tabText: {
     textAlign: 'center',
@@ -256,7 +266,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.fontWeight.medium,
   },
   activeTabText: {
-    color: Colors.text.inverse,
+    // color applied inline with theme
   },
   content: {
     flex: 1,
@@ -284,7 +294,7 @@ const styles = StyleSheet.create({
     margin: Spacing.sm,
     padding: Spacing.lg,
     borderRadius: 16,
-    backgroundColor: `${Colors.primary}0D`,
+    backgroundColor: 'rgba(255, 107, 107, 0.05)', // fallback color
   },
   recentMatchImage: {
     width: 80,
@@ -334,7 +344,7 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: Colors.background.primary,
+    borderColor: '#FFFFFF', // fallback color
   },
   messageContent: {
     flex: 1,

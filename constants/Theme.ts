@@ -1,5 +1,5 @@
 /**
- * Theme constants for consistent styling across the app
+ * Theme constants for consistent styling across the app with light/dark mode support
  */
 
 // Carnation color palette
@@ -17,7 +17,8 @@ const carnation = {
   950: '#480707',
 };
 
-export const Colors = {
+// Light and Dark theme configurations
+export const lightTheme = {
   // Primary brand colors using carnation palette
   primary: carnation[400],        // #ff6b6b - Main brand color
   primaryLight: carnation[300],   // #ffa0a0 - Light variant
@@ -64,6 +65,57 @@ export const Colors = {
     veryHigh: carnation[700],  // #c11414 - Darker carnation for very high energy
   },
 };
+
+export const darkTheme = {
+  // Primary brand colors using carnation palette (slightly adjusted for dark mode)
+  primary: carnation[400],        // #ff6b6b - Main brand color
+  primaryLight: carnation[300],   // #ffa0a0 - Light variant
+  primaryDark: carnation[600],    // #e51d1d - Dark variant
+  primarySubtle: carnation[950],  // #480707 - Dark variant for backgrounds
+  
+  // Text colors (inverted for dark mode)
+  text: {
+    primary: '#FFFFFF',         // Main headings and important text
+    secondary: '#E0E0E0',       // Secondary headings and medium importance text
+    tertiary: '#B0B0B0',        // Body text and descriptions
+    quaternary: '#8A8A8A',      // Subtle text and captions
+    inverse: '#1A1A1A',         // Dark text for light backgrounds
+    accent: carnation[300],     // #ffa0a0 - Lighter accent for dark mode
+  },
+  
+  // Background colors (dark mode)
+  background: {
+    primary: '#121212',         // Dark primary background
+    secondary: '#1E1E1E',       // Slightly lighter dark background
+    tertiary: carnation[950],   // #480707 - Very dark carnation tint
+    card: '#1E1E1E',           // Card background
+    overlay: 'rgba(0, 0, 0, 0.7)',
+  },
+  
+  // UI colors (adjusted for dark mode)
+  border: {
+    light: '#333333',
+    medium: carnation[800],     // #a01414 - Dark carnation borders
+    dark: carnation[700],       // #c11414 - Stronger dark carnation borders
+  },
+  
+  // Status colors (adjusted for dark mode visibility)
+  success: '#66BB6A',
+  warning: '#FFA726',
+  error: carnation[400],       // #ff6b6b - Brighter error for dark mode
+  info: '#42A5F5',
+  
+  // Energy level colors (adjusted for dark mode)
+  energy: {
+    low: '#66BB6A',
+    medium: '#FFA726',
+    high: carnation[400],      // #ff6b6b - Brighter for dark mode
+    veryHigh: carnation[300],  // #ffa0a0 - Even brighter for visibility
+  },
+};
+
+// Default export for backward compatibility - will be overridden by theme context
+export const Colors = lightTheme;
 
 export const Typography = {
   // Font sizes

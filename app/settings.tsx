@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
-import { Colors, Spacing, Typography } from '@/constants/Theme';
+import { Spacing, Typography } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -14,6 +15,7 @@ import {
 } from 'react-native';
 
 export default function SettingsScreen() {
+  const { theme, themeType, toggleTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [locationEnabled, setLocationEnabled] = React.useState(true);
   const [showAge, setShowAge] = React.useState(true);
@@ -78,13 +80,13 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={24} color={Colors.primary} />
+          <FontAwesome name="arrow-left" size={24} color={theme.primary} />
         </TouchableOpacity>
-        <ThemedText style={[styles.headerTitle, { color: Colors.primary }]}>
+        <ThemedText style={[styles.headerTitle, { color: theme.primary }]}>
           Settings
         </ThemedText>
         <View style={styles.placeholder} />
@@ -93,95 +95,115 @@ export default function SettingsScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Account Section */}
         <View style={styles.section}>
-          <ThemedText style={[styles.sectionTitle, { color: Colors.text.primary }]}>Account</ThemedText>
+          <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>Account</ThemedText>
           
-          <TouchableOpacity style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]} onPress={handleEditProfile}>
+          <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]} onPress={handleEditProfile}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="edit" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Edit Profile</ThemedText>
+              <FontAwesome name="edit" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Edit Profile</ThemedText>
             </View>
-            <FontAwesome name="chevron-right" size={16} color={Colors.text.quaternary} />
+            <FontAwesome name="chevron-right" size={16} color={theme.text.quaternary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]} onPress={handlePrivacySettings}>
+          <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]} onPress={handlePrivacySettings}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="lock" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Privacy Settings</ThemedText>
+              <FontAwesome name="lock" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Privacy Settings</ThemedText>
             </View>
-            <FontAwesome name="chevron-right" size={16} color={Colors.text.quaternary} />
+            <FontAwesome name="chevron-right" size={16} color={theme.text.quaternary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]} onPress={handleNotificationSettings}>
+          <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]} onPress={handleNotificationSettings}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="bell" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Notifications</ThemedText>
+              <FontAwesome name="bell" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Notifications</ThemedText>
             </View>
-            <FontAwesome name="chevron-right" size={16} color={Colors.text.quaternary} />
+            <FontAwesome name="chevron-right" size={16} color={theme.text.quaternary} />
           </TouchableOpacity>
         </View>
 
         {/* Preferences Section */}
         <View style={styles.section}>
-          <ThemedText style={[styles.sectionTitle, { color: Colors.text.primary }]}>Preferences</ThemedText>
+          <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>Preferences</ThemedText>
           
-          <View style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]}>
+          <View style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="bell" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Push Notifications</ThemedText>
+              <FontAwesome name="bell" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Push Notifications</ThemedText>
             </View>
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
-              trackColor={{ false: Colors.border.light, true: Colors.primary }}
-              thumbColor={Colors.text.inverse}
+              trackColor={{ false: theme.border.light, true: theme.primary }}
+              thumbColor={theme.text.inverse}
             />
           </View>
 
-          <View style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]}>
+          <View style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="map-marker" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Location Services</ThemedText>
+              <FontAwesome name="map-marker" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Location Services</ThemedText>
             </View>
             <Switch
               value={locationEnabled}
               onValueChange={setLocationEnabled}
-              trackColor={{ false: Colors.border.light, true: Colors.primary }}
-              thumbColor={Colors.text.inverse}
+              trackColor={{ false: theme.border.light, true: theme.primary }}
+              thumbColor={theme.text.inverse}
             />
           </View>
 
-          <View style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]}>
+          <View style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="user" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Show Age on Profile</ThemedText>
+              <FontAwesome name="user" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Show Age on Profile</ThemedText>
             </View>
             <Switch
               value={showAge}
               onValueChange={setShowAge}
-              trackColor={{ false: Colors.border.light, true: Colors.primary }}
-              thumbColor={Colors.text.inverse}
+              trackColor={{ false: theme.border.light, true: theme.primary }}
+              thumbColor={theme.text.inverse}
+            />
+          </View>
+
+          <View style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]}>
+            <View style={styles.settingLeft}>
+              <FontAwesome 
+                name={themeType === 'dark' ? 'moon-o' : 'sun-o'} 
+                size={20} 
+                color={theme.text.secondary} 
+                style={styles.settingIcon} 
+              />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>
+                {themeType === 'dark' ? 'Dark Mode' : 'Light Mode'}
+              </ThemedText>
+            </View>
+            <Switch
+              value={themeType === 'dark'}
+              onValueChange={toggleTheme}
+              trackColor={{ false: theme.border.light, true: theme.primary }}
+              thumbColor={theme.text.inverse}
             />
           </View>
         </View>
 
         {/* Support Section */}
         <View style={styles.section}>
-          <ThemedText style={[styles.sectionTitle, { color: Colors.text.primary }]}>Support</ThemedText>
+          <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>Support</ThemedText>
           
-          <TouchableOpacity style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]} onPress={handleSupport}>
+          <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]} onPress={handleSupport}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="comment" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>Contact Support</ThemedText>
+              <FontAwesome name="comment" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>Contact Support</ThemedText>
             </View>
-            <FontAwesome name="chevron-right" size={16} color={Colors.text.quaternary} />
+            <FontAwesome name="chevron-right" size={16} color={theme.text.quaternary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.settingItem, { backgroundColor: Colors.background.tertiary }]} onPress={handleAbout}>
+          <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.background.tertiary }]} onPress={handleAbout}>
             <View style={styles.settingLeft}>
-              <FontAwesome name="info-circle" size={20} color={Colors.text.secondary} style={styles.settingIcon} />
-              <ThemedText style={[styles.settingLabel, { color: Colors.text.primary }]}>About Psinder</ThemedText>
+              <FontAwesome name="info-circle" size={20} color={theme.text.secondary} style={styles.settingIcon} />
+              <ThemedText style={[styles.settingLabel, { color: theme.text.primary }]}>About Psinder</ThemedText>
             </View>
-            <FontAwesome name="chevron-right" size={16} color={Colors.text.quaternary} />
+            <FontAwesome name="chevron-right" size={16} color={theme.text.quaternary} />
           </TouchableOpacity>
         </View>
 
@@ -189,15 +211,15 @@ export default function SettingsScreen() {
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <LinearGradient
-              colors={[Colors.primary, Colors.primaryLight]}
+              colors={[theme.primary, theme.primaryLight]}
               style={styles.gradientButton}
             >
-              <ThemedText style={[styles.logoutButtonText, { color: Colors.text.inverse }]}>Logout</ThemedText>
+              <ThemedText style={[styles.logoutButtonText, { color: theme.text.inverse }]}>Logout</ThemedText>
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.deleteButton, { borderColor: Colors.error }]} onPress={handleDeleteAccount}>
-            <ThemedText style={[styles.deleteButtonText, { color: Colors.error }]}>Delete Account</ThemedText>
+          <TouchableOpacity style={[styles.deleteButton, { borderColor: theme.error }]} onPress={handleDeleteAccount}>
+            <ThemedText style={[styles.deleteButtonText, { color: theme.error }]}>Delete Account</ThemedText>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -220,7 +242,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     fontSize: Typography.fontSize.xxl,
-    color: Colors.primary,
+    // color will be set dynamically in component
   },
   headerTitle: {
     fontSize: Typography.fontSize.xxl,
