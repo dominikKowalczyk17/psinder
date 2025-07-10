@@ -1,17 +1,18 @@
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { Colors, Spacing, Typography, getEnergyColor } from '@/constants/Theme';
+import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    Animated,
-    Dimensions,
-    Image,
-    PanResponder,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  PanResponder,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -140,43 +141,36 @@ export default function HomeScreen() {
   const handleLike = () => swipeCard('right');
   const handlePass = () => swipeCard('left');
 
-  const getEnergyColor = (energy: string) => {
-    switch (energy) {
-      case 'Low': return '#4CAF50';
-      case 'Medium': return '#FF9800';
-      case 'High': return '#F44336';
-      case 'Very High': return '#E91E63';
-      default: return '#9E9E9E';
-    }
-  };
-
   if (!currentDog) {
     return (
-      <ThemedView style={styles.container}>
-        <ThemedText style={styles.noMoreText}>No more dogs to show!</ThemedText>
-      </ThemedView>
+      <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+        <ThemedText style={[styles.noMoreText, { color: Colors.text.secondary }]}>No more dogs to show!</ThemedText>
+      </View>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
       {/* Header */}
       <View style={styles.header}>
-        <ThemedText type="title" style={styles.headerTitle}>
+        <ThemedText style={[styles.headerTitle, { color: Colors.primary }]}>
           Psinder
         </ThemedText>
         <View style={styles.headerButtons}>
-          <TouchableOpacity style={styles.headerButton}>
-            <ThemedText style={styles.headerButtonText}>🔍</ThemedText>
+          <TouchableOpacity style={[styles.headerButton, { backgroundColor: Colors.primarySubtle }]}>
+            <FontAwesome name="search" size={20} color={Colors.primary} />
           </TouchableOpacity>
           <TouchableOpacity 
-            style={styles.headerButton}
+            style={[styles.headerButton, { backgroundColor: Colors.primarySubtle }]}
             onPress={() => router.push('/matches')}
           >
-            <ThemedText style={styles.headerButtonText}>💬</ThemedText>
+            <FontAwesome name="comment" size={20} color={Colors.primary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.headerButton}>
-            <ThemedText style={styles.headerButtonText}>👤</ThemedText>
+          <TouchableOpacity 
+            style={[styles.headerButton, { backgroundColor: Colors.primarySubtle }]}
+            onPress={() => router.push('/profile')}
+          >
+            <FontAwesome name="user" size={20} color={Colors.primary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -220,27 +214,29 @@ export default function HomeScreen() {
           <View style={styles.dogInfo}>
             <View style={styles.dogHeader}>
               <View style={styles.dogNameSection}>
-                <ThemedText style={styles.dogName}>
+                <ThemedText style={[styles.dogName, { color: Colors.text.primary }]}>
                   {currentDog.name}, {currentDog.age}
                 </ThemedText>
-                <ThemedText style={styles.distance}>📍{currentDog.distance}</ThemedText>
+                <ThemedText style={[styles.distance, { color: Colors.text.tertiary }]}>
+                  <FontAwesome name="map-marker" size={14} color={Colors.text.tertiary} /> {currentDog.distance}
+                </ThemedText>
               </View>
             </View>
 
-            <ThemedText style={styles.dogBreed}>{currentDog.breed}</ThemedText>
-            <ThemedText style={styles.dogOwner}>Owner: {currentDog.owner}</ThemedText>
+            <ThemedText style={[styles.dogBreed, { color: Colors.text.secondary }]}>{currentDog.breed}</ThemedText>
+            <ThemedText style={[styles.dogOwner, { color: Colors.text.tertiary }]}>Owner: {currentDog.owner}</ThemedText>
 
             {/* Tags */}
             <View style={styles.tagsContainer}>
               <View style={[styles.tag, { backgroundColor: getEnergyColor(currentDog.energy) }]}>
-                <ThemedText style={styles.tagText}>{currentDog.energy} Energy</ThemedText>
+                <ThemedText style={[styles.tagText, { color: Colors.text.inverse }]}>{currentDog.energy} Energy</ThemedText>
               </View>
-              <View style={styles.tag}>
-                <ThemedText style={styles.tagText}>{currentDog.size}</ThemedText>
+              <View style={[styles.tag, { backgroundColor: Colors.background.tertiary }]}>
+                <ThemedText style={[styles.tagText, { color: Colors.text.secondary }]}>{currentDog.size}</ThemedText>
               </View>
             </View>
 
-            <ThemedText style={styles.dogBio}>{currentDog.bio}</ThemedText>
+            <ThemedText style={[styles.dogBio, { color: Colors.text.tertiary }]}>{currentDog.bio}</ThemedText>
           </View>
 
           {/* Swipe indicators */}
@@ -296,32 +292,32 @@ export default function HomeScreen() {
       <View style={styles.actionsContainer}>
         <TouchableOpacity style={styles.actionButton} onPress={handlePass}>
           <LinearGradient
-            colors={['#FF6B6B', '#FF8E8E']}
+            colors={[Colors.error, Colors.primaryLight]}
             style={styles.actionButtonGradient}
           >
-            <ThemedText style={styles.actionButtonText}>❌</ThemedText>
+            <FontAwesome name="times" size={28} color={Colors.text.inverse} />
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.superLikeButton}>
           <LinearGradient
-            colors={['#4FC3F7', '#29B6F6']}
+            colors={[Colors.info, Colors.info]}
             style={styles.actionButtonGradient}
           >
-            <ThemedText style={styles.actionButtonText}>⭐</ThemedText>
+            <FontAwesome name="star" size={28} color={Colors.text.inverse} />
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.actionButton} onPress={handleLike}>
           <LinearGradient
-            colors={['#66BB6A', '#4CAF50']}
+            colors={[Colors.success, Colors.success]}
             style={styles.actionButtonGradient}
           >
-            <ThemedText style={styles.actionButtonText}>❤️</ThemedText>
+            <FontAwesome name="heart" size={28} color={Colors.text.inverse} />
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -334,41 +330,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: Spacing.xl,
+    paddingBottom: Spacing.xl,
   },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FF6B6B',
+    fontSize: Typography.fontSize.xxxl,
+    fontWeight: Typography.fontWeight.bold,
+    paddingTop: Spacing.lg,
   },
   headerButtons: {
     flexDirection: 'row',
-    gap: 15,
+    gap: Spacing.md,
   },
   headerButton: {
     width: 40,
     height: 40,
-    backgroundColor: 'rgba(255, 107, 107, 0.1)',
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerButtonText: {
-    fontSize: 20,
+    fontSize: Typography.fontSize.xl,
   },
   cardContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.xl,
   },
   card: {
     width: screenWidth - 40,
     height: screenHeight * 0.7,
     borderRadius: 20,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    backgroundColor: Colors.background.card,
+    shadowColor: Colors.text.primary,
     shadowOffset: {
       width: 0,
       height: 8,
@@ -386,7 +381,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: Colors.background.tertiary,
   },
   cardImage: {
     width: '100%',
@@ -394,26 +389,25 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   dogInfo: {
-    backgroundColor: '#f8f8f8',
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    backgroundColor: Colors.background.secondary,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xl,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: Colors.border.light,
   },
   dogHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 10,
+    marginBottom: Spacing.md,
   },
   dogNameSection: {
     flex: 1,
-    paddingRight: 14,
+    paddingRight: Spacing.sm,
   },
   dogName: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.fontSize.xxl,
+    fontWeight: Typography.fontWeight.bold,
     lineHeight: 30,
   },
   distanceSection: {
@@ -421,76 +415,70 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   distance: {
-    fontSize: 13,
-    color: '#666',
-    opacity: 0.8,
+    fontSize: Typography.fontSize.sm,
+    lineHeight: 18,
   },
   dogBreed: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 6,
+    fontSize: Typography.fontSize.lg,
+    marginBottom: Spacing.sm,
     lineHeight: 20,
   },
   dogOwner: {
-    fontSize: 14,
-    color: '#888',
-    marginBottom: 12,
+    fontSize: Typography.fontSize.sm,
+    marginBottom: Spacing.md,
     lineHeight: 18,
   },
   tagsContainer: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
+    gap: Spacing.sm,
+    marginBottom: Spacing.md,
   },
   tag: {
-    backgroundColor: 'rgba(255, 107, 107, 0.1)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'rgba(255, 107, 107, 0.2)',
+    borderColor: Colors.border.light,
   },
   tagText: {
-    fontSize: 12,
-    color: '#803c37',
-    fontWeight: '600',
+    fontSize: Typography.fontSize.xs,
+    fontWeight: Typography.fontWeight.semibold,
   },
   dogBio: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: Typography.fontSize.sm,
     lineHeight: 20,
   },
   swipeIndicator: {
     position: 'absolute',
     top: 100,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.md,
     borderRadius: 10,
     borderWidth: 3,
   },
   likeIndicator: {
-    right: 20,
-    borderColor: '#4CAF50',
-    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    right: Spacing.xl,
+    borderColor: Colors.success,
+    backgroundColor: `${Colors.success}1A`,
   },
   passIndicator: {
-    left: 20,
-    borderColor: '#F44336',
-    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+    left: Spacing.xl,
+    borderColor: Colors.error,
+    backgroundColor: `${Colors.error}1A`,
   },
   swipeText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontSize: Typography.fontSize.xxl,
+    fontWeight: Typography.fontWeight.bold,
+    color: Colors.text.inverse,
   },
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 20,
-    paddingHorizontal: 40,
-    paddingTop: 20,
-    paddingBottom: 40,
+    gap: Spacing.xl,
+    paddingHorizontal: Spacing.huge,
+    paddingTop: Spacing.xl,
+    paddingBottom: Spacing.huge,
   },
   actionButton: {
     width: 60,
@@ -510,10 +498,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionButtonText: {
-    fontSize: 24,
+    fontSize: Typography.fontSize.xxl,
   },
   noMoreText: {
-    fontSize: 18,
+    fontSize: Typography.fontSize.lg,
     textAlign: 'center',
     marginTop: 50,
   },

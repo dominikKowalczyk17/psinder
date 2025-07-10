@@ -1,27 +1,24 @@
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors, Spacing, Typography } from '@/constants/Theme';
+import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const textColor = useThemeColor({}, 'text');
-  const placeholderColor = useThemeColor({ light: '#666', dark: '#999' }, 'text');
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -48,18 +45,19 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <ThemedView style={styles.content}>
-          {/* Header */}
-          <View style={styles.header}>
-            <ThemedText type="title" style={styles.title}>
+    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.content}>
+            {/* Header */}
+            <View style={styles.header}>
+            <ThemedText style={[styles.title, { color: Colors.text.primary }]}>
               Welcome to Psinder
             </ThemedText>
-            <ThemedText style={styles.subtitle}>
+            <ThemedText style={[styles.subtitle, { color: Colors.text.secondary }]}>
               Find your perfect match
             </ThemedText>
           </View>
@@ -68,9 +66,9 @@ export default function LoginScreen() {
           <View style={styles.form}>
             <View style={styles.inputContainer}>
               <TextInput
-                style={[styles.input, { color: textColor, borderColor: placeholderColor }]}
+                style={[styles.input, { color: Colors.text.primary, borderColor: Colors.border.medium }]}
                 placeholder="Email"
-                placeholderTextColor={placeholderColor}
+                placeholderTextColor={Colors.text.quaternary}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -81,9 +79,9 @@ export default function LoginScreen() {
 
             <View style={styles.inputContainer}>
               <TextInput
-                style={[styles.input, { color: textColor, borderColor: placeholderColor }]}
+                style={[styles.input, { color: Colors.text.primary, borderColor: Colors.border.medium }]}
                 placeholder="Password"
-                placeholderTextColor={placeholderColor}
+                placeholderTextColor={Colors.text.quaternary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -96,7 +94,7 @@ export default function LoginScreen() {
               style={styles.forgotPasswordButton}
               onPress={handleForgotPassword}
             >
-              <ThemedText type="link" style={styles.forgotPasswordText}>
+              <ThemedText style={[styles.forgotPasswordText, { color: Colors.text.accent }]}>
                 Forgot Password?
               </ThemedText>
             </TouchableOpacity>
@@ -108,12 +106,12 @@ export default function LoginScreen() {
               disabled={isLoading}
             >
               <LinearGradient
-                colors={['#FF6B6B', '#FF8E8E']}
+                colors={[Colors.primary, Colors.primaryLight]}
                 style={styles.gradientButton}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               >
-                <ThemedText style={styles.loginButtonText}>
+                <ThemedText style={[styles.loginButtonText, { color: Colors.text.inverse }]}>
                   {isLoading ? 'Signing In...' : 'Sign In'}
                 </ThemedText>
               </LinearGradient>
@@ -122,48 +120,53 @@ export default function LoginScreen() {
             {/* Social Login Options */}
             <View style={styles.socialContainer}>
               <View style={styles.divider}>
-                <View style={[styles.line, { backgroundColor: placeholderColor }]} />
-                <ThemedText style={styles.dividerText}>or continue with</ThemedText>
-                <View style={[styles.line, { backgroundColor: placeholderColor }]} />
+                <View style={[styles.line, { backgroundColor: Colors.border.medium }]} />
+                <ThemedText style={[styles.dividerText, { color: Colors.text.quaternary }]}>or continue with</ThemedText>
+                <View style={[styles.line, { backgroundColor: Colors.border.medium }]} />
               </View>
 
               <View style={styles.socialButtons}>
                 <TouchableOpacity
-                  style={[styles.socialButton, { borderColor: placeholderColor }]}
+                  style={[styles.socialButton, { borderColor: Colors.border.medium }]}
                   onPress={() => Alert.alert('Google', 'Google login coming soon!')}
                 >
-                  <ThemedText style={styles.socialButtonText}>Google</ThemedText>
+                  <FontAwesome name="google" size={16} color={Colors.text.secondary} style={{ marginRight: Spacing.sm }} />
+                  <ThemedText style={[styles.socialButtonText, { color: Colors.text.secondary }]}>Google</ThemedText>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[styles.socialButton, { borderColor: placeholderColor }]}
+                  style={[styles.socialButton, { borderColor: Colors.border.medium }]}
                   onPress={() => Alert.alert('Facebook', 'Facebook login coming soon!')}
                 >
-                  <ThemedText style={styles.socialButtonText}>Facebook</ThemedText>
+                  <FontAwesome name="facebook" size={16} color={Colors.text.secondary} style={{ marginRight: Spacing.sm }} />
+                  <ThemedText style={[styles.socialButtonText, { color: Colors.text.secondary }]}>Facebook</ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
 
             {/* Sign Up Link */}
             <View style={styles.signUpContainer}>
-              <ThemedText style={styles.signUpText}>
+              <ThemedText style={[styles.signUpText, { color: Colors.text.tertiary }]}>
                 Don&apos;t have an account?{' '}
               </ThemedText>
               <TouchableOpacity onPress={handleSignUp}>
-                <ThemedText type="link" style={styles.signUpLink}>
+                <ThemedText style={[styles.signUpLink, { color: Colors.text.accent }]}>
                   Sign Up
                 </ThemedText>
               </TouchableOpacity>
-            </View>
+            </View>            </View>
           </View>
-        </ThemedView>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  keyboardContainer: {
     flex: 1,
   },
   scrollContainer: {
@@ -172,48 +175,49 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 40,
+    paddingHorizontal: Spacing.xxl,
+    paddingVertical: Spacing.huge,
     justifyContent: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: Spacing.huge,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: Typography.fontSize.huge,
+    fontWeight: Typography.fontWeight.bold,
+    marginBottom: Spacing.sm,
     textAlign: 'center',
+    paddingTop: Spacing.lg,
   },
   subtitle: {
-    fontSize: 16,
-    opacity: 0.7,
+    fontSize: Typography.fontSize.base,
     textAlign: 'center',
   },
   form: {
     width: '100%',
   },
   inputContainer: {
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   input: {
     height: 52,
     borderWidth: 1,
     borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    paddingHorizontal: Spacing.lg,
+    fontSize: Typography.fontSize.base,
     backgroundColor: 'transparent',
   },
   forgotPasswordButton: {
     alignSelf: 'flex-end',
-    marginBottom: 24,
+    marginBottom: Spacing.xxl,
   },
   forgotPasswordText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.medium,
   },
   loginButton: {
-    marginBottom: 24,
+    marginBottom: Spacing.xxl,
     borderRadius: 12,
     overflow: 'hidden',
   },
@@ -226,44 +230,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: Typography.fontSize.base,
+    fontWeight: Typography.fontWeight.semibold,
   },
   socialContainer: {
-    marginBottom: 24,
+    marginBottom: Spacing.xxl,
   },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   line: {
     flex: 1,
     height: 1,
   },
   dividerText: {
-    marginHorizontal: 16,
-    fontSize: 14,
-    opacity: 0.7,
+    marginHorizontal: Spacing.lg,
+    fontSize: Typography.fontSize.sm,
   },
   socialButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: Spacing.md,
   },
   socialButton: {
     flex: 1,
     height: 48,
     borderWidth: 1,
     borderRadius: 12,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
   socialButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.medium,
   },
   signUpContainer: {
     flexDirection: 'row',
@@ -271,10 +274,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signUpText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.sm,
   },
   signUpLink: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.semibold,
   },
 });

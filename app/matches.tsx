@@ -1,14 +1,14 @@
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors, Spacing, Typography } from '@/constants/Theme';
+import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    FlatList,
-    Image,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 // Mock data for matches
@@ -62,22 +62,21 @@ const recentMatches = [
 
 export default function MatchesScreen() {
   const [activeTab, setActiveTab] = useState<'messages' | 'matches'>('matches');
-  const borderColor = useThemeColor({ light: '#E0E0E0', dark: '#333' }, 'text');
 
   const renderMatch = ({ item }: { item: typeof recentMatches[0] }) => (
     <TouchableOpacity style={styles.recentMatchItem}>
       <Image source={{ uri: item.image }} style={styles.recentMatchImage} />
-      <View style={styles.matchBadge}>
-        <ThemedText style={styles.matchBadgeText}>NEW</ThemedText>
+      <View style={[styles.matchBadge, { backgroundColor: Colors.success }]}>
+        <ThemedText style={[styles.matchBadgeText, { color: Colors.text.inverse }]}>NEW</ThemedText>
       </View>
-      <ThemedText style={styles.recentMatchName}>{item.dogName}</ThemedText>
-      <ThemedText style={styles.recentMatchTime}>{item.matchTime}</ThemedText>
+      <ThemedText style={[styles.recentMatchName, { color: Colors.text.primary }]}>{item.dogName}</ThemedText>
+      <ThemedText style={[styles.recentMatchTime, { color: Colors.text.quaternary }]}>{item.matchTime}</ThemedText>
     </TouchableOpacity>
   );
 
   const renderMessage = ({ item }: { item: typeof mockMatches[0] }) => (
     <TouchableOpacity 
-      style={[styles.messageItem, { borderBottomColor: borderColor }]}
+      style={[styles.messageItem, { borderBottomColor: Colors.border.light }]}
       onPress={() => {
         // Navigate to chat screen (to be implemented)
         console.log('Navigate to chat with', item.ownerName);
@@ -85,18 +84,22 @@ export default function MatchesScreen() {
     >
       <View style={styles.messageImageContainer}>
         <Image source={{ uri: item.image }} style={styles.messageImage} />
-        {item.unread && <View style={styles.unreadIndicator} />}
+        {item.unread && <View style={[styles.unreadIndicator, { backgroundColor: Colors.primary }]} />}
       </View>
       
       <View style={styles.messageContent}>
         <View style={styles.messageHeader}>
-          <ThemedText style={styles.messageName}>
+          <ThemedText style={[styles.messageName, { color: Colors.text.primary }]}>
             {item.dogName} & {item.ownerName}
           </ThemedText>
-          <ThemedText style={styles.messageTime}>{item.timestamp}</ThemedText>
+          <ThemedText style={[styles.messageTime, { color: Colors.text.quaternary }]}>{item.timestamp}</ThemedText>
         </View>
         <ThemedText 
-          style={[styles.messageText, item.unread && styles.messageTextUnread]}
+          style={[
+            styles.messageText,
+            { color: Colors.text.tertiary },
+            item.unread && [styles.messageTextUnread, { color: Colors.text.secondary }]
+          ]}
           numberOfLines={1}
         >
           {item.lastMessage}
@@ -106,13 +109,13 @@ export default function MatchesScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <ThemedText style={styles.backButton}>←</ThemedText>
+          <FontAwesome name="arrow-left" size={24} color={Colors.primary} />
         </TouchableOpacity>
-        <ThemedText type="title" style={styles.headerTitle}>
+        <ThemedText style={[styles.headerTitle, { color: Colors.primary }]}>
           Matches
         </ThemedText>
         <View style={styles.headerRight} />
@@ -121,18 +124,26 @@ export default function MatchesScreen() {
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'matches' && styles.activeTab]}
+          style={[styles.tab, activeTab === 'matches' && [styles.activeTab, { backgroundColor: Colors.primary }]]}
           onPress={() => setActiveTab('matches')}
         >
-          <ThemedText style={[styles.tabText, activeTab === 'matches' && styles.activeTabText]}>
+          <ThemedText style={[
+            styles.tabText,
+            { color: Colors.text.secondary },
+            activeTab === 'matches' && [styles.activeTabText, { color: Colors.text.inverse }]
+          ]}>
             New Matches ({recentMatches.length})
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'messages' && styles.activeTab]}
+          style={[styles.tab, activeTab === 'messages' && [styles.activeTab, { backgroundColor: Colors.primary }]]}
           onPress={() => setActiveTab('messages')}
         >
-          <ThemedText style={[styles.tabText, activeTab === 'messages' && styles.activeTabText]}>
+          <ThemedText style={[
+            styles.tabText,
+            { color: Colors.text.secondary },
+            activeTab === 'messages' && [styles.activeTabText, { color: Colors.text.inverse }]
+          ]}>
             Messages ({mockMatches.filter(m => m.unread).length})
           </ThemedText>
         </TouchableOpacity>
@@ -144,10 +155,10 @@ export default function MatchesScreen() {
           {recentMatches.length > 0 ? (
             <>
               <View style={styles.sectionHeader}>
-                <ThemedText style={styles.sectionTitle}>
+                <ThemedText style={[styles.sectionTitle, { color: Colors.text.primary }]}>
                   🎉 New Walking Buddies!
                 </ThemedText>
-                <ThemedText style={styles.sectionSubtitle}>
+                <ThemedText style={[styles.sectionSubtitle, { color: Colors.text.tertiary }]}>
                   Send a message to start planning your walk
                 </ThemedText>
               </View>
@@ -163,15 +174,15 @@ export default function MatchesScreen() {
           ) : (
             <View style={styles.emptyState}>
               <ThemedText style={styles.emptyStateEmoji}>🐕</ThemedText>
-              <ThemedText style={styles.emptyStateTitle}>No matches yet</ThemedText>
-              <ThemedText style={styles.emptyStateText}>
+              <ThemedText style={[styles.emptyStateTitle, { color: Colors.text.primary }]}>No matches yet</ThemedText>
+              <ThemedText style={[styles.emptyStateText, { color: Colors.text.tertiary }]}>
                 Keep swiping to find the perfect walking buddy for your dog!
               </ThemedText>
               <TouchableOpacity 
-                style={styles.backToSwipingButton}
+                style={[styles.backToSwipingButton, { backgroundColor: Colors.primary }]}
                 onPress={() => router.push('/home')}
               >
-                <ThemedText style={styles.backToSwipingText}>Back to Swiping</ThemedText>
+                <ThemedText style={[styles.backToSwipingText, { color: Colors.text.inverse }]}>Back to Swiping</ThemedText>
               </TouchableOpacity>
             </View>
           )}
@@ -188,15 +199,15 @@ export default function MatchesScreen() {
           ) : (
             <View style={styles.emptyState}>
               <ThemedText style={styles.emptyStateEmoji}>💬</ThemedText>
-              <ThemedText style={styles.emptyStateTitle}>No messages yet</ThemedText>
-              <ThemedText style={styles.emptyStateText}>
+              <ThemedText style={[styles.emptyStateTitle, { color: Colors.text.primary }]}>No messages yet</ThemedText>
+              <ThemedText style={[styles.emptyStateText, { color: Colors.text.tertiary }]}>
                 Start a conversation with your matches to plan a walk!
               </ThemedText>
             </View>
           )}
         </View>
       )}
-    </ThemedView>
+    </View>
   );
 }
 
@@ -209,111 +220,106 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: Spacing.xl,
+    paddingBottom: Spacing.xl,
   },
   backButton: {
-    fontSize: 24,
-    color: '#FF6B6B',
+    fontSize: Typography.fontSize.xxl,
+    color: Colors.primary,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FF6B6B',
+    fontSize: Typography.fontSize.xxl,
+    fontWeight: Typography.fontWeight.bold,
   },
   headerRight: {
     width: 24,
   },
   tabContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingHorizontal: Spacing.xl,
+    marginBottom: Spacing.xl,
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
     borderRadius: 20,
-    marginHorizontal: 4,
-    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    marginHorizontal: Spacing.xs,
+    backgroundColor: Colors.primarySubtle,
   },
   activeTab: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: Colors.primary,
   },
   tabText: {
     textAlign: 'center',
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.medium,
   },
   activeTabText: {
-    color: '#FFFFFF',
+    color: Colors.text.inverse,
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.xl,
   },
   sectionHeader: {
-    marginBottom: 20,
+    marginBottom: Spacing.xl,
     alignItems: 'center',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontSize: Typography.fontSize.lg,
+    fontWeight: Typography.fontWeight.bold,
+    marginBottom: Spacing.xs,
   },
   sectionSubtitle: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: Typography.fontSize.sm,
     textAlign: 'center',
   },
   matchesGrid: {
-    paddingBottom: 20,
+    paddingBottom: Spacing.xl,
   },
   recentMatchItem: {
     flex: 1,
     alignItems: 'center',
-    margin: 8,
-    padding: 16,
+    margin: Spacing.sm,
+    padding: Spacing.lg,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 107, 107, 0.05)',
+    backgroundColor: `${Colors.primary}0D`,
   },
   recentMatchImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginBottom: 8,
+    marginBottom: Spacing.sm,
   },
   matchBadge: {
     position: 'absolute',
-    top: 8,
-    right: 8,
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 6,
+    top: Spacing.sm,
+    right: Spacing.sm,
+    paddingHorizontal: Spacing.sm,
     paddingVertical: 2,
     borderRadius: 8,
   },
   matchBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 'bold',
+    fontSize: Typography.fontSize.xs,
+    fontWeight: Typography.fontWeight.bold,
   },
   recentMatchName: {
-    fontWeight: '600',
-    fontSize: 14,
+    fontWeight: Typography.fontWeight.semibold,
+    fontSize: Typography.fontSize.sm,
     marginBottom: 2,
   },
   recentMatchTime: {
-    fontSize: 12,
-    opacity: 0.6,
+    fontSize: Typography.fontSize.xs,
   },
   messageItem: {
     flexDirection: 'row',
-    padding: 16,
+    padding: Spacing.lg,
     borderBottomWidth: 1,
   },
   messageImageContainer: {
     position: 'relative',
-    marginRight: 12,
+    marginRight: Spacing.md,
   },
   messageImage: {
     width: 60,
@@ -327,9 +333,8 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#FF6B6B',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.background.primary,
   },
   messageContent: {
     flex: 1,
@@ -339,55 +344,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: Spacing.xs,
   },
   messageName: {
-    fontWeight: '600',
-    fontSize: 16,
+    fontWeight: Typography.fontWeight.semibold,
+    fontSize: Typography.fontSize.base,
   },
   messageTime: {
-    fontSize: 12,
-    opacity: 0.6,
+    fontSize: Typography.fontSize.xs,
   },
   messageText: {
-    fontSize: 14,
-    opacity: 0.8,
+    fontSize: Typography.fontSize.sm,
   },
   messageTextUnread: {
-    fontWeight: '500',
-    opacity: 1,
+    fontWeight: Typography.fontWeight.medium,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 40,
+    paddingHorizontal: Spacing.huge,
   },
   emptyStateEmoji: {
     fontSize: 64,
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   emptyStateTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: Typography.fontSize.xl,
+    fontWeight: Typography.fontWeight.bold,
+    marginBottom: Spacing.sm,
     textAlign: 'center',
   },
   emptyStateText: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: Typography.fontSize.sm,
     textAlign: 'center',
     lineHeight: 20,
-    marginBottom: 24,
+    marginBottom: Spacing.xxl,
   },
   backToSwipingButton: {
-    backgroundColor: '#FF6B6B',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingHorizontal: Spacing.xxl,
+    paddingVertical: Spacing.md,
     borderRadius: 20,
   },
   backToSwipingText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: Typography.fontWeight.semibold,
   },
 });
