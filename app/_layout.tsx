@@ -16,27 +16,29 @@ function AppContent() {
     <NavigationThemeProvider value={navigationTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen 
-          name="home" 
-          options={{ 
+        <Stack.Screen
+          name="home"
+          options={{
             headerShown: false,
             gestureEnabled: false,
-          }} 
+          }}
         />
-        <Stack.Screen 
-          name="profile-setup" 
-          options={{ 
+        <Stack.Screen
+          name="profile-setup"
+          options={{
             headerShown: false,
             gestureEnabled: false,
-          }} 
+          }}
         />
         <Stack.Screen name="matches" options={{ headerShown: false }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="profile-edit" options={{ headerShown: false }} />
         <Stack.Screen name="settings" options={{ headerShown: false }} />
+        <Stack.Screen name="chat" options={{ headerShown: false }} />
+        <Stack.Screen name="chat/[matchId]" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style={themeType === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style={themeType === "dark" ? "light" : "dark"} />
     </NavigationThemeProvider>
   );
 }

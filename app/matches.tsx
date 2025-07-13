@@ -80,8 +80,10 @@ export default function MatchesScreen() {
     <TouchableOpacity 
       style={[styles.messageItem, { borderBottomColor: theme.border.light }]}
       onPress={() => {
-        // Navigate to chat screen (to be implemented)
-        console.log('Navigate to chat with', item.ownerName);
+        router.push({
+        pathname: '/chat/[matchId]',
+        params: { matchId: item.id, dogName: item.dogName, dogAvatar: item.image }
+      });
       }}
     >
       <View style={styles.messageImageContainer}>

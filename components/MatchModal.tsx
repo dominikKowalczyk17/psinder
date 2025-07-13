@@ -47,7 +47,7 @@ export const MatchModal: React.FC<MatchModalProps> = ({ visible, onClose, dogNam
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.centeredMatchTextContainer}>
-          <ThemedText style={[styles.matchText, { color: theme.success }]}>It's a match!</ThemedText>
+          <ThemedText style={[styles.matchText, { color: theme.success }]}>It&apos;s a match!</ThemedText>
         </View>
         <View style={styles.actionsContainer}>
           <TextInput

@@ -7,16 +7,15 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function MatchScreen() {
   const { theme } = useTheme();
-  // Get params from navigation (dogName, dogImage, ownerName)
-  const { dogName, dogImage, ownerName } = useLocalSearchParams();
+  const { dogImage, ownerName } = useLocalSearchParams();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background.primary }]}> 
       <View style={styles.iconContainer}>
         <FontAwesome name="heart" size={80} color={theme.success} />
       </View>
-      <ThemedText style={[styles.title, { color: theme.success }]}>It's a Match!</ThemedText>
-      <ThemedText style={[styles.subtitle, { color: theme.text.primary }]}>You and {ownerName} both like each other's dogs!</ThemedText>
+      <ThemedText style={[styles.title, { color: theme.success }]}>It&apos;s a Match!</ThemedText>
+      <ThemedText style={[styles.subtitle, { color: theme.text.primary }]}>You and {ownerName} both like each other&apos;s dogs!</ThemedText>
       <View style={styles.dogsContainer}>
         <Image source={{ uri: dogImage as string }} style={styles.dogImage} />
         <FontAwesome name="exchange" size={32} color={theme.primary} style={styles.exchangeIcon} />
