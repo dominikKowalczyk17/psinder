@@ -1,3 +1,4 @@
+import { MatchModal } from '@/components/MatchModal';
 import { ThemedText } from '@/components/ThemedText';
 import { Spacing, Typography, getEnergyColor } from '@/constants/Theme';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -6,14 +7,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
   Animated,
   Dimensions,
   Image,
   PanResponder,
   StyleSheet,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -65,6 +65,9 @@ export default function HomeScreen() {
   const [translateY] = useState(new Animated.Value(0));
   const [rotate] = useState(new Animated.Value(0));
   const [scale] = useState(new Animated.Value(1));
+  const [showActionIndicator, setShowActionIndicator] = useState<null | 'like' | 'pass'>(null); // for full overlay after swipe
+  const [showMatchModal, setShowMatchModal] = useState(false);
+  const [matchDog, setMatchDog] = useState<any>(null);
 
   const currentDog = mockDogs[currentDogIndex];
 
@@ -77,7 +80,7 @@ export default function HomeScreen() {
 
   const swipeCard = (direction: 'left' | 'right') => {
     const toValue = direction === 'right' ? screenWidth + 100 : -screenWidth - 100;
-    
+    setShowActionIndicator(direction === 'right' ? 'like' : 'pass');
     Animated.parallel([
       Animated.timing(translateX, {
         toValue,
@@ -90,12 +93,17 @@ export default function HomeScreen() {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      if (direction === 'right') {
-        Alert.alert('It\'s a Match! 🐕', `You liked ${currentDog?.name}! We'll notify ${currentDog?.owner} about your interest.`);
-      }
-      
-      setCurrentDogIndex((prev) => (prev + 1) % mockDogs.length);
-      resetAnimation();
+      // Show full indicator for 600ms, then advance
+      setTimeout(() => {
+        if (direction === 'right') {
+          setMatchDog(currentDog);
+          setShowMatchModal(true);
+        } else {
+          setCurrentDogIndex((prev) => (prev + 1) % mockDogs.length);
+        }
+        resetAnimation();
+        setShowActionIndicator(null);
+      }, 600);
     });
   };
 
@@ -142,25 +150,35 @@ export default function HomeScreen() {
   const handleLike = () => swipeCard('right');
   const handlePass = () => swipeCard('left');
 
-  if (!currentDog) {
+  if (!currentDog && !showMatchModal) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
+      <View style={[styles.container, { backgroundColor: theme.background.primary }]}> 
         <ThemedText style={[styles.noMoreText, { color: theme.text.secondary }]}>No more dogs to show!</ThemedText>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}> 
+      {/* Match Modal */}
+      {showMatchModal && matchDog && (
+        <MatchModal
+          visible={showMatchModal}
+          onClose={() => {
+            setShowMatchModal(false);
+            setCurrentDogIndex((prev) => (prev + 1) % mockDogs.length);
+            setMatchDog(null);
+          }}
+          dogName={matchDog.name}
+          dogImages={[matchDog.image]}
+        />
+      )}
       {/* Header */}
       <View style={styles.header}>
         <ThemedText style={[styles.headerTitle, { color: theme.primary }]}>
           Psinder
         </ThemedText>
         <View style={styles.headerButtons}>
-          <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.primarySubtle }]}>
-            <FontAwesome name="search" size={20} color={theme.primary} />
-          </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.headerButton, { backgroundColor: theme.primarySubtle }]}
             onPress={() => router.push('/matches')}
@@ -178,127 +196,119 @@ export default function HomeScreen() {
 
       {/* Card Stack */}
       <View style={styles.cardContainer}>
-        {/* Next card (background) */}
-        {mockDogs[currentDogIndex + 1] && (
-          <View style={[styles.card, styles.nextCard]}>
-            <Image
-              source={{ uri: mockDogs[currentDogIndex + 1].image }}
-              style={styles.cardImage}
-            />
-          </View>
+        {/* Show indicator background instead of next card while swiping */}
+        {showActionIndicator === null && (
+          <Animated.View
+            style={[
+              styles.card,
+              styles.nextCard,
+              {
+                backgroundColor: translateX.interpolate({
+                  inputRange: [-50, 0, 50],
+                  outputRange: [theme.error, theme.background.card, theme.success],
+                  extrapolate: 'clamp',
+                }),
+                opacity: translateX.interpolate({
+                  inputRange: [-150, 0, 150],
+                  outputRange: [0.7, 0, 0.7],
+                  extrapolate: 'clamp',
+                }),
+                zIndex: 0,
+              },
+            ]}
+          >
+            <Animated.View style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+              opacity: translateX.interpolate({
+                inputRange: [-50, 0, 50],
+                outputRange: [1, 0, 1],
+                extrapolate: 'clamp',
+              }),
+              transform: [{
+                scale: translateX.interpolate({
+                  inputRange: [-150, 0, 150],
+                  outputRange: [1.1, 0.8, 1.1],
+                  extrapolate: 'clamp',
+                }),
+              }],
+            }}>
+              { /* Show icon depending on swipe direction */ }
+              <Animated.View style={{ opacity: translateX.interpolate({ inputRange: [30, 120], outputRange: [0, 1], extrapolate: 'clamp' }) }}>
+                <FontAwesome name="heart" size={80} color={theme.text.inverse} />
+              </Animated.View>
+              <Animated.View style={{ opacity: translateX.interpolate({ inputRange: [-120, -30], outputRange: [1, 0], extrapolate: 'clamp' }) }}>
+                <FontAwesome name="times" size={80} color={theme.text.inverse} />
+              </Animated.View>
+            </Animated.View>
+          </Animated.View>
         )}
 
         {/* Current card */}
-        <Animated.View
-          {...panResponder.panHandlers}
-          style={[
-            styles.card,
-            {
-              backgroundColor: theme.background.card,
-              shadowColor: theme.text.primary,
-              transform: [
-                { translateX },
-                { translateY },
-                { rotate: rotate.interpolate({
-                  inputRange: [-1, 1],
-                  outputRange: ['-30deg', '30deg'],
-                }) },
-                { scale },
-              ],
-            },
-          ]}
-        >
-          {/* Dog Photo */}
-          <View style={[styles.imageContainer, { backgroundColor: theme.background.tertiary }]}>
-            <Image source={{ uri: currentDog.image }} style={styles.cardImage} />
-          </View>
-
-          {/* Dog Info Section - Separate from image */}
-          <View style={[
-            styles.dogInfo, 
-            { 
-              backgroundColor: theme.background.secondary,
-              borderTopColor: theme.border.light 
-            }
-          ]}>
-            <View style={styles.dogHeader}>
-              <View style={styles.dogNameSection}>
-                <ThemedText style={[styles.dogName, { color: theme.text.primary }]}>
-                  {currentDog.name}, {currentDog.age}
-                </ThemedText>
-                <ThemedText style={[styles.distance, { color: theme.text.tertiary }]}>
-                  <FontAwesome name="map-marker" size={14} color={theme.text.tertiary} /> {currentDog.distance}
-                </ThemedText>
-              </View>
-            </View>
-
-            <ThemedText style={[styles.dogBreed, { color: theme.text.secondary }]}>{currentDog.breed}</ThemedText>
-            <ThemedText style={[styles.dogOwner, { color: theme.text.tertiary }]}>Owner: {currentDog.owner}</ThemedText>
-
-            {/* Tags */}
-            <View style={styles.tagsContainer}>
-              <View style={[styles.tag, { backgroundColor: getEnergyColor(currentDog.energy), borderColor: theme.border.light }]}>
-                <ThemedText style={[styles.tagText, { color: theme.text.inverse }]}>{currentDog.energy} Energy</ThemedText>
-              </View>
-              <View style={[styles.tag, { backgroundColor: theme.background.tertiary, borderColor: theme.border.light }]}>
-                <ThemedText style={[styles.tagText, { color: theme.text.secondary }]}>{currentDog.size}</ThemedText>
-              </View>
-            </View>
-
-            <ThemedText style={[styles.dogBio, { color: theme.text.tertiary }]}>{currentDog.bio}</ThemedText>
-          </View>
-
-          {/* Swipe indicators */}
+        {showActionIndicator === null && (
           <Animated.View
+            {...panResponder.panHandlers}
             style={[
-              styles.swipeIndicator,
-              styles.likeIndicator,
+              styles.card,
               {
-                borderColor: theme.success,
-                backgroundColor: `${theme.success}1A`,
-                opacity: translateX.interpolate({
-                  inputRange: [0, 150],
-                  outputRange: [0, 1],
-                  extrapolate: 'clamp',
-                }),
-                transform: [{
-                  scale: translateX.interpolate({
-                    inputRange: [0, 150],
-                    outputRange: [0.8, 1.2],
-                    extrapolate: 'clamp',
-                  }),
-                }],
+                backgroundColor: theme.background.card,
+                shadowColor: theme.text.primary,
+                transform: [
+                  { translateX },
+                  { translateY },
+                  { rotate: rotate.interpolate({
+                    inputRange: [-1, 1],
+                    outputRange: ['-30deg', '30deg'],
+                  }) },
+                  { scale },
+                ],
+                zIndex: 1,
               },
             ]}
           >
-            <ThemedText style={[styles.swipeText, { color: theme.text.inverse }]}>LIKE</ThemedText>
+            {/* ...existing card content... */}
+            <View style={[styles.imageContainer, { backgroundColor: theme.background.tertiary }]}> 
+              <Image source={{ uri: currentDog.image }} style={styles.cardImage} />
+            </View>
+            <View style={[
+              styles.dogInfo, 
+              { 
+                backgroundColor: theme.background.secondary,
+                borderTopColor: theme.border.light 
+              }
+            ]}>
+              <View style={styles.dogHeader}>
+                <View style={styles.dogNameSection}>
+                  <ThemedText style={[styles.dogName, { color: theme.text.primary }]}> 
+                    {currentDog.name}, {currentDog.age}
+                  </ThemedText>
+                  <ThemedText style={[styles.distance, { color: theme.text.tertiary }]}> 
+                    <FontAwesome name="map-marker" size={14} color={theme.text.tertiary} /> {currentDog.distance}
+                  </ThemedText>
+                </View>
+              </View>
+              <ThemedText style={[styles.dogBreed, { color: theme.text.secondary }]}>{currentDog.breed}</ThemedText>
+              <ThemedText style={[styles.dogOwner, { color: theme.text.tertiary }]}>Owner: {currentDog.owner}</ThemedText>
+              <View style={styles.tagsContainer}>
+                <View style={[styles.tag, { backgroundColor: getEnergyColor(currentDog.energy), borderColor: theme.border.light }]}> 
+                  <ThemedText style={[styles.tagText, { color: theme.text.inverse }]}>{currentDog.energy} Energy</ThemedText>
+                </View>
+                <View style={[styles.tag, { backgroundColor: theme.background.tertiary, borderColor: theme.border.light }]}> 
+                  <ThemedText style={[styles.tagText, { color: theme.text.secondary }]}>{currentDog.size}</ThemedText>
+                </View>
+              </View>
+              <ThemedText style={[styles.dogBio, { color: theme.text.tertiary }]}>{currentDog.bio}</ThemedText>
+            </View>
           </Animated.View>
+        )}
 
-          <Animated.View
-            style={[
-              styles.swipeIndicator,
-              styles.passIndicator,
-              {
-                borderColor: theme.error,
-                backgroundColor: `${theme.error}1A`,
-                opacity: translateX.interpolate({
-                  inputRange: [-150, 0],
-                  outputRange: [1, 0],
-                  extrapolate: 'clamp',
-                }),
-                transform: [{
-                  scale: translateX.interpolate({
-                    inputRange: [-150, 0],
-                    outputRange: [1.2, 0.8],
-                    extrapolate: 'clamp',
-                  }),
-                }],
-              },
-            ]}
-          >
-            <ThemedText style={[styles.swipeText, { color: theme.text.inverse }]}>PASS</ThemedText>
-          </Animated.View>
-        </Animated.View>
+        {/* After swipe, show full overlay with icon, covering the card */}
+        {showActionIndicator && (
+          <View style={[styles.card, { backgroundColor: showActionIndicator === 'like' ? theme.success : theme.error, alignItems: 'center', justifyContent: 'center', zIndex: 2 }]}> 
+            <FontAwesome name={showActionIndicator === 'like' ? 'heart' : 'times'} size={100} color={theme.text.inverse} />
+          </View>
+        )}
       </View>
 
       {/* Action buttons */}
@@ -332,6 +342,7 @@ export default function HomeScreen() {
       </View>
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
