@@ -3,19 +3,34 @@
  * https://docs.expo.dev/guides/color-schemes/
  */
 
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+
+import { useTheme } from '@/contexts/ThemeContext';
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+  colorName: string
 ) {
-  const theme = useColorScheme() ?? 'light';
-  const colorFromProps = props[theme];
+  const { theme, themeType } = useTheme();
+  const colorFromProps = props[themeType];
 
+  // Try to resolve color from props, then from theme object
   if (colorFromProps) {
     return colorFromProps;
-  } else {
-    return Colors[theme][colorName];
   }
+  // Try to resolve nested keys (e.g. 'text.primary')
+  const keys = colorName.split('.');
+  let color: any = theme;
+  for (const key of keys) {
+    if (color && key in color) {
+      color = color[key];
+    } else {
+      color = undefined;
+      break;
+    }
+  }
+  if (typeof color === 'string') {
+    return color;
+  }
+  // fallback
+  return '#000';
 }

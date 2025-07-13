@@ -94,7 +94,6 @@ export default function HomeScreen() {
         Alert.alert('It\'s a Match! 🐕', `You liked ${currentDog?.name}! We'll notify ${currentDog?.owner} about your interest.`);
       }
       
-      // Move to next dog
       setCurrentDogIndex((prev) => (prev + 1) % mockDogs.length);
       resetAnimation();
     });

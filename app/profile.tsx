@@ -1,18 +1,17 @@
-import PhotoUpload from '@/components/PhotoUpload';
-import { ThemedText } from '@/components/ThemedText';
+import { DogDetailsSection } from '@/components/profile/DogDetailsSection';
+import { DogPhotosSection } from '@/components/profile/DogPhotosSection';
+import { ProfileActions } from '@/components/profile/ProfileActions';
+import { ProfileHeader } from '@/components/profile/ProfileHeader';
+import { UserInfoSection } from '@/components/profile/UserInfoSection';
 import { Spacing, Typography } from '@/constants/Theme';
 import { useTheme } from '@/contexts/ThemeContext';
-import { FontAwesome } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    Image,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  View
 } from 'react-native';
 
 // Mock user data - in a real app this would come from state management/API
@@ -56,84 +55,27 @@ export default function ProfileViewScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={24} color={theme.primary} />
-        </TouchableOpacity>
-        <ThemedText style={[styles.headerTitle, { color: theme.primary }]}>
-          Profile
-        </ThemedText>
-        <TouchableOpacity onPress={handleSettings}>
-          <FontAwesome name="cog" size={20} color={theme.text.secondary} />
-        </TouchableOpacity>
-      </View>
-
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}> 
+      <ProfileHeader onBack={() => router.back()} onSettings={handleSettings} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Dog Photos Section - Now First */}
-        <View style={styles.dogPhotosSection}>
-          <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>Meet {mockUserData.dog.name}</ThemedText>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosScroll}>
-            {dogPhotos.map((photo, index) => (
-              <Image key={index} source={{ uri: photo }} style={styles.dogPhoto} />
-            ))}
-            <PhotoUpload
-              onPhotoSelected={handleAddDogPhoto}
-              style={styles.addPhotoButton}
-              label="Add Photo"
-            />
-          </ScrollView>
-        </View>
-
-        {/* Dog Details Section */}
-        <View style={styles.dogSection}>
-          <View style={styles.dogHeader}>
-            <ThemedText style={[styles.dogName, { color: theme.text.primary }]}>
-              {mockUserData.dog.name}
-            </ThemedText>
-          </View>
-          <ThemedText style={[styles.dogBreed, { color: theme.text.secondary }]}>{mockUserData.dog.breed}</ThemedText>
-          
-          {/* Dog Tags */}
-          <View style={styles.tagsContainer}>
-            <View style={[styles.tag, { backgroundColor: theme.primarySubtle }]}>
-              <ThemedText style={[styles.tagText, { color: theme.text.inverse }]}>{mockUserData.dog.energy} Energy</ThemedText>
-            </View>
-            <View style={[styles.tag, { backgroundColor: theme.background.tertiary }]}>
-              <ThemedText style={[styles.tagText, { color: theme.text.secondary }]}>{mockUserData.dog.size}</ThemedText>
-            </View>
-          </View>
-
-          <ThemedText style={[styles.dogBio, { color: theme.text.tertiary }]}>{mockUserData.dog.bio}</ThemedText>
-        </View>
-
-        {/* User Info Section */}
-        <View style={styles.infoSection}>
-          <View style={styles.nameSection}>
-            <ThemedText style={[styles.userName, { color: theme.text.primary }]}>{mockUserData.name}, {mockUserData.age}</ThemedText>
-            <TouchableOpacity style={[styles.editButton, { borderColor: theme.primary }]} onPress={handleEditProfile}>
-              <ThemedText style={[styles.editButtonText, { color: theme.primary }]}>Edit Profile</ThemedText>
-            </TouchableOpacity>
-          </View>
-          <ThemedText style={[styles.userBio, { color: theme.text.tertiary }]}>{mockUserData.bio}</ThemedText>
-        </View>
-
-        {/* Action Buttons */}
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
-            <LinearGradient
-              colors={[theme.primary, theme.primaryLight]}
-              style={styles.gradientButton}
-            >
-              <ThemedText style={[styles.actionButtonText, { color: theme.text.inverse }]}>Edit Profile</ThemedText>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.primary }]} onPress={() => router.push('/home')}>
-            <ThemedText style={[styles.secondaryButtonText, { color: theme.primary }]}>Back to Swiping</ThemedText>
-          </TouchableOpacity>
-        </View>
+        <DogPhotosSection dogName={mockUserData.dog.name} dogPhotos={dogPhotos} onAddPhoto={handleAddDogPhoto} />
+        <DogDetailsSection
+          name={mockUserData.dog.name}
+          breed={mockUserData.dog.breed}
+          energy={mockUserData.dog.energy}
+          size={mockUserData.dog.size}
+          bio={mockUserData.dog.bio}
+        />
+        <UserInfoSection
+          name={mockUserData.name}
+          age={mockUserData.age}
+          bio={mockUserData.bio}
+          onEdit={handleEditProfile}
+        />
+        <ProfileActions
+          onEdit={handleEditProfile}
+          onBackToSwiping={() => router.push('/home')}
+        />
       </ScrollView>
     </View>
   );

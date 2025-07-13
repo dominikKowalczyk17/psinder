@@ -1,15 +1,15 @@
 import { ThemedText } from '@/components/ThemedText';
-import { Colors } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
-    ActionSheetIOS,
-    Alert,
-    Image,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActionSheetIOS,
+  Alert,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 interface PhotoUploadProps {
@@ -25,6 +25,7 @@ export default function PhotoUpload({
   style,
   label = 'Add Photo' 
 }: PhotoUploadProps) {
+  const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
 
   const requestPermissions = async () => {
@@ -112,17 +113,17 @@ export default function PhotoUpload({
         <View style={styles.photoContainer}>
           <Image source={{ uri: currentPhoto }} style={styles.photo} />
           <View style={styles.overlay}>
-            <ThemedText style={styles.changeText}>
+            <ThemedText style={[styles.changeText, { color: theme.text.inverse }]}>
               {isLoading ? 'Loading...' : 'Change Photo'}
             </ThemedText>
           </View>
         </View>
       ) : (
-        <View style={styles.addPhotoContainer}>
-          <ThemedText style={styles.addPhotoText}>
+        <View style={[styles.addPhotoContainer, { borderColor: theme.primary, backgroundColor: `${theme.primary}10` }] }>
+          <ThemedText style={[styles.addPhotoText, { color: theme.primary }]}>
             {isLoading ? '⏳' : '+'}
           </ThemedText>
-          <ThemedText style={styles.addPhotoLabel}>
+          <ThemedText style={[styles.addPhotoLabel, { color: theme.primary }]}>
             {isLoading ? 'Loading...' : label}
           </ThemedText>
         </View>
@@ -157,7 +158,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   changeText: {
-    color: Colors.text.inverse,
     fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
@@ -165,20 +165,16 @@ const styles = StyleSheet.create({
   addPhotoContainer: {
     flex: 1,
     borderWidth: 2,
-    borderColor: Colors.primary,
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: `${Colors.primary}10`,
   },
   addPhotoText: {
     fontSize: 32,
-    color: Colors.primary,
     marginBottom: 4,
   },
   addPhotoLabel: {
     fontSize: 12,
-    color: Colors.primary,
     fontWeight: '500',
     textAlign: 'center',
   },

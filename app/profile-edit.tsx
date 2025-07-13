@@ -281,17 +281,17 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     fontSize: 16,
-    color: 'gray',
+    // color dynamicznie inline
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black',
+    // color dynamicznie inline
   },
   saveButton: {
     fontSize: 16,
-    color: 'blue',
     fontWeight: '600',
+    // color dynamicznie inline
   },
   section: {
     paddingHorizontal: 20,
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'black',
+    // color dynamicznie inline
   },
   inputContainer: {
     marginBottom: 20,
@@ -310,26 +310,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 8,
-    color: 'black',
+    // color dynamicznie inline
   },
   input: {
     borderWidth: 1,
-    borderColor: 'lightgray',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    backgroundColor: 'white',
+    // backgroundColor, borderColor dynamicznie inline
   },
   textArea: {
     borderWidth: 1,
-    borderColor: 'lightgray',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    backgroundColor: 'white',
     minHeight: 100,
+    // backgroundColor, borderColor dynamicznie inline
   },
   selectorContainer: {
     flexDirection: 'row',
@@ -341,20 +339,18 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'lightgray',
-    backgroundColor: 'white',
+    // borderColor, backgroundColor dynamicznie inline
   },
   selectedButton: {
-    backgroundColor: 'blue',
-    borderColor: 'blue',
+    // backgroundColor, borderColor dynamicznie inline
   },
   selectorText: {
     fontSize: 14,
-    color: 'gray',
+    // color dynamicznie inline
   },
   selectedText: {
-    color: 'white',
     fontWeight: '600',
+    // color dynamicznie inline
   },
   actionContainer: {
     paddingHorizontal: 20,
@@ -370,8 +366,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonText: {
-    color: 'white',
     fontSize: 16,
     fontWeight: '600',
+    // color dynamicznie inline
   },
 });
