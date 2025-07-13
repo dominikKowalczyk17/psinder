@@ -1,5 +1,5 @@
 import { ThemedText } from '@/components/ThemedText';
-import { Colors, Spacing, Typography } from '@/constants/Theme';
+import { Spacing, Typography } from '@/constants/Theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -14,8 +14,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function LoginScreen() {
+  const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +47,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}> 
       <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -54,10 +56,10 @@ export default function LoginScreen() {
           <View style={styles.content}>
             {/* Header */}
             <View style={styles.header}>
-            <ThemedText style={[styles.title, { color: Colors.text.primary }]}>
+            <ThemedText style={[styles.title, { color: theme.text.primary }]}>
               Welcome to Psinder
             </ThemedText>
-            <ThemedText style={[styles.subtitle, { color: Colors.text.secondary }]}>
+            <ThemedText style={[styles.subtitle, { color: theme.text.secondary }]}>
               Find your perfect match
             </ThemedText>
           </View>
@@ -66,9 +68,9 @@ export default function LoginScreen() {
           <View style={styles.form}>
             <View style={styles.inputContainer}>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary, borderColor: Colors.border.medium }]}
+                style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
                 placeholder="Email"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -79,9 +81,9 @@ export default function LoginScreen() {
 
             <View style={styles.inputContainer}>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary, borderColor: Colors.border.medium }]}
+                style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
                 placeholder="Password"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -94,7 +96,7 @@ export default function LoginScreen() {
               style={styles.forgotPasswordButton}
               onPress={handleForgotPassword}
             >
-              <ThemedText style={[styles.forgotPasswordText, { color: Colors.text.accent }]}>
+              <ThemedText style={[styles.forgotPasswordText, { color: theme.text.accent }]}> 
                 Forgot Password?
               </ThemedText>
             </TouchableOpacity>
@@ -106,12 +108,12 @@ export default function LoginScreen() {
               disabled={isLoading}
             >
               <LinearGradient
-                colors={[Colors.primary, Colors.primaryLight]}
+                colors={[theme.primary, theme.primaryLight]}
                 style={styles.gradientButton}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               >
-                <ThemedText style={[styles.loginButtonText, { color: Colors.text.inverse }]}>
+                <ThemedText style={[styles.loginButtonText, { color: theme.text.inverse }]}> 
                   {isLoading ? 'Signing In...' : 'Sign In'}
                 </ThemedText>
               </LinearGradient>
@@ -120,37 +122,37 @@ export default function LoginScreen() {
             {/* Social Login Options */}
             <View style={styles.socialContainer}>
               <View style={styles.divider}>
-                <View style={[styles.line, { backgroundColor: Colors.border.medium }]} />
-                <ThemedText style={[styles.dividerText, { color: Colors.text.quaternary }]}>or continue with</ThemedText>
-                <View style={[styles.line, { backgroundColor: Colors.border.medium }]} />
+                <View style={[styles.line, { backgroundColor: theme.border.medium }]} />
+                <ThemedText style={[styles.dividerText, { color: theme.text.quaternary }]}>or continue with</ThemedText>
+                <View style={[styles.line, { backgroundColor: theme.border.medium }]} />
               </View>
 
               <View style={styles.socialButtons}>
                 <TouchableOpacity
-                  style={[styles.socialButton, { borderColor: Colors.border.medium }]}
+                  style={[styles.socialButton, { borderColor: theme.border.medium }]}
                   onPress={() => Alert.alert('Google', 'Google login coming soon!')}
                 >
-                  <FontAwesome name="google" size={16} color={Colors.text.secondary} style={{ marginRight: Spacing.sm }} />
-                  <ThemedText style={[styles.socialButtonText, { color: Colors.text.secondary }]}>Google</ThemedText>
+                  <FontAwesome name="google" size={16} color={theme.text.secondary} style={{ marginRight: Spacing.sm }} />
+                  <ThemedText style={[styles.socialButtonText, { color: theme.text.secondary }]}>Google</ThemedText>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[styles.socialButton, { borderColor: Colors.border.medium }]}
+                  style={[styles.socialButton, { borderColor: theme.border.medium }]}
                   onPress={() => Alert.alert('Facebook', 'Facebook login coming soon!')}
                 >
-                  <FontAwesome name="facebook" size={16} color={Colors.text.secondary} style={{ marginRight: Spacing.sm }} />
-                  <ThemedText style={[styles.socialButtonText, { color: Colors.text.secondary }]}>Facebook</ThemedText>
+                  <FontAwesome name="facebook" size={16} color={theme.text.secondary} style={{ marginRight: Spacing.sm }} />
+                  <ThemedText style={[styles.socialButtonText, { color: theme.text.secondary }]}>Facebook</ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
 
             {/* Sign Up Link */}
             <View style={styles.signUpContainer}>
-              <ThemedText style={[styles.signUpText, { color: Colors.text.tertiary }]}>
+              <ThemedText style={[styles.signUpText, { color: theme.text.tertiary }]}> 
                 Don&apos;t have an account?{' '}
               </ThemedText>
               <TouchableOpacity onPress={handleSignUp}>
-                <ThemedText style={[styles.signUpLink, { color: Colors.text.accent }]}>
+                <ThemedText style={[styles.signUpLink, { color: theme.text.accent }]}> 
                   Sign Up
                 </ThemedText>
               </TouchableOpacity>

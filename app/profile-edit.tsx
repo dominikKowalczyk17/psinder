@@ -1,5 +1,4 @@
 import { ThemedText } from '@/components/ThemedText';
-import { Colors, Spacing } from '@/constants/Theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,6 +12,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 // Mock user data - in a real app this would come from state management/API
 const mockUserData = {
@@ -33,6 +33,8 @@ const dogSizes = ['Small', 'Medium', 'Large', 'Extra Large'];
 const energyLevels = ['Low', 'Medium', 'High', 'Very High'];
 
 export default function ProfileEditScreen() {
+  const { theme } = useTheme();
+
   // User form state
   const [userName, setUserName] = useState(mockUserData.name);
   const [userAge, setUserAge] = useState(mockUserData.age.toString());
@@ -78,7 +80,7 @@ export default function ProfileEditScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel}>
@@ -104,22 +106,22 @@ export default function ProfileEditScreen() {
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Name *</ThemedText>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary }]}
+                style={[styles.input, { color: theme.text.primary }]}
                 value={userName}
                 onChangeText={setUserName}
                 placeholder="Enter your name"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Age *</ThemedText>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary }]}
+                style={[styles.input, { color: theme.text.primary }]}
                 value={userAge}
                 onChangeText={setUserAge}
                 placeholder="Enter your age"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
                 keyboardType="numeric"
               />
             </View>
@@ -127,11 +129,11 @@ export default function ProfileEditScreen() {
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Bio</ThemedText>
               <TextInput
-                style={[styles.textArea, { color: Colors.text.primary }]}
+                style={[styles.textArea, { color: theme.text.primary }]}
                 value={userBio}
                 onChangeText={setUserBio}
                 placeholder="Tell us about yourself..."
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
@@ -146,33 +148,33 @@ export default function ProfileEditScreen() {
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Dog&apos;s Name *</ThemedText>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary }]}
+                style={[styles.input, { color: theme.text.primary }]}
                 value={dogName}
                 onChangeText={setDogName}
                 placeholder="Enter your dog's name"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Breed *</ThemedText>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary }]}
+                style={[styles.input, { color: theme.text.primary }]}
                 value={dogBreed}
                 onChangeText={setDogBreed}
                 placeholder="Enter your dog's breed"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Age *</ThemedText>
               <TextInput
-                style={[styles.input, { color: Colors.text.primary }]}
+                style={[styles.input, { color: theme.text.primary }]}
                 value={dogAge}
                 onChangeText={setDogAge}
                 placeholder="Enter your dog's age"
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
                 keyboardType="numeric"
               />
             </View>
@@ -232,11 +234,11 @@ export default function ProfileEditScreen() {
             <View style={styles.inputContainer}>
               <ThemedText style={styles.label}>Dog&apos;s Bio</ThemedText>
               <TextInput
-                style={[styles.textArea, { color: Colors.text.primary }]}
+                style={[styles.textArea, { color: theme.text.primary }]}
                 value={dogBio}
                 onChangeText={setDogBio}
                 placeholder="Tell us about your dog..."
-                placeholderTextColor={Colors.text.quaternary}
+                placeholderTextColor={theme.text.quaternary}
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
@@ -248,7 +250,7 @@ export default function ProfileEditScreen() {
           <View style={styles.actionContainer}>
             <TouchableOpacity style={styles.saveButtonContainer} onPress={handleSave}>
               <LinearGradient
-                colors={[Colors.primary, Colors.primaryLight]}
+                colors={[theme.primary, theme.primaryLight]}
                 style={styles.gradientButton}
               >
                 <ThemedText style={styles.saveButtonText}>Save Changes</ThemedText>
@@ -275,20 +277,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingBottom: 20,
-    paddingTop: Spacing.md,
+    paddingTop: 20,
   },
   cancelButton: {
     fontSize: 16,
-    color: Colors.text.secondary,
+    color: 'gray',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.primary,
+    color: 'black',
   },
   saveButton: {
     fontSize: 16,
-    color: Colors.primary,
+    color: 'blue',
     fontWeight: '600',
   },
   section: {
@@ -299,7 +301,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: Colors.primary,
+    color: 'black',
   },
   inputContainer: {
     marginBottom: 20,
@@ -308,25 +310,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 8,
-    color: Colors.text.primary,
+    color: 'black',
   },
   input: {
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: 'lightgray',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: 'white',
   },
   textArea: {
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: 'lightgray',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: 'white',
     minHeight: 100,
   },
   selectorContainer: {
@@ -339,19 +341,19 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.border.light,
-    backgroundColor: Colors.background.secondary,
+    borderColor: 'lightgray',
+    backgroundColor: 'white',
   },
   selectedButton: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: 'blue',
+    borderColor: 'blue',
   },
   selectorText: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: 'gray',
   },
   selectedText: {
-    color: Colors.text.inverse,
+    color: 'white',
     fontWeight: '600',
   },
   actionContainer: {
@@ -368,7 +370,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonText: {
-    color: Colors.text.inverse,
+    color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },

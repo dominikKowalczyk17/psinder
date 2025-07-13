@@ -1,6 +1,7 @@
 import PhotoUpload from '@/components/PhotoUpload';
 import { ThemedText } from '@/components/ThemedText';
-import { Colors, Spacing, Typography, getEnergyColor } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Spacing, Typography } from '@/constants/Theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -38,6 +39,7 @@ const mockUserData = {
 };
 
 export default function ProfileViewScreen() {
+  const { theme } = useTheme();
   const [dogPhotos, setDogPhotos] = useState(mockUserData.dog.photos);
 
   const handleEditProfile = () => {
@@ -54,24 +56,24 @@ export default function ProfileViewScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={24} color={Colors.primary} />
+          <FontAwesome name="arrow-left" size={24} color={theme.primary} />
         </TouchableOpacity>
-        <ThemedText style={[styles.headerTitle, { color: Colors.primary }]}>
-          Your Profile
+        <ThemedText style={[styles.headerTitle, { color: theme.primary }]}>
+          Profile
         </ThemedText>
         <TouchableOpacity onPress={handleSettings}>
-          <FontAwesome name="cog" size={20} color={Colors.text.secondary} />
+          <FontAwesome name="cog" size={20} color={theme.text.secondary} />
         </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Dog Photos Section - Now First */}
         <View style={styles.dogPhotosSection}>
-          <ThemedText style={[styles.sectionTitle, { color: Colors.text.primary }]}>Meet {mockUserData.dog.name}</ThemedText>
+          <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>Meet {mockUserData.dog.name}</ThemedText>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosScroll}>
             {dogPhotos.map((photo, index) => (
               <Image key={index} source={{ uri: photo }} style={styles.dogPhoto} />
@@ -87,49 +89,49 @@ export default function ProfileViewScreen() {
         {/* Dog Details Section */}
         <View style={styles.dogSection}>
           <View style={styles.dogHeader}>
-            <ThemedText style={[styles.dogName, { color: Colors.text.primary }]}>
-              {mockUserData.dog.name}, {mockUserData.dog.age} years old
+            <ThemedText style={[styles.dogName, { color: theme.text.primary }]}>
+              {mockUserData.dog.name}
             </ThemedText>
           </View>
-          <ThemedText style={[styles.dogBreed, { color: Colors.text.secondary }]}>{mockUserData.dog.breed}</ThemedText>
+          <ThemedText style={[styles.dogBreed, { color: theme.text.secondary }]}>{mockUserData.dog.breed}</ThemedText>
           
           {/* Dog Tags */}
           <View style={styles.tagsContainer}>
-            <View style={[styles.tag, { backgroundColor: getEnergyColor(mockUserData.dog.energy) }]}>
-              <ThemedText style={[styles.tagText, { color: Colors.text.inverse }]}>{mockUserData.dog.energy} Energy</ThemedText>
+            <View style={[styles.tag, { backgroundColor: theme.primarySubtle }]}>
+              <ThemedText style={[styles.tagText, { color: theme.text.inverse }]}>{mockUserData.dog.energy} Energy</ThemedText>
             </View>
-            <View style={[styles.tag, { backgroundColor: Colors.background.tertiary }]}>
-              <ThemedText style={[styles.tagText, { color: Colors.text.secondary }]}>{mockUserData.dog.size}</ThemedText>
+            <View style={[styles.tag, { backgroundColor: theme.background.tertiary }]}>
+              <ThemedText style={[styles.tagText, { color: theme.text.secondary }]}>{mockUserData.dog.size}</ThemedText>
             </View>
           </View>
 
-          <ThemedText style={[styles.dogBio, { color: Colors.text.tertiary }]}>{mockUserData.dog.bio}</ThemedText>
+          <ThemedText style={[styles.dogBio, { color: theme.text.tertiary }]}>{mockUserData.dog.bio}</ThemedText>
         </View>
 
         {/* User Info Section */}
         <View style={styles.infoSection}>
           <View style={styles.nameSection}>
-            <ThemedText style={[styles.userName, { color: Colors.text.primary }]}>{mockUserData.name}, {mockUserData.age}</ThemedText>
-            <TouchableOpacity style={[styles.editButton, { borderColor: Colors.primary }]} onPress={handleEditProfile}>
-              <ThemedText style={[styles.editButtonText, { color: Colors.primary }]}>Edit Profile</ThemedText>
+            <ThemedText style={[styles.userName, { color: theme.text.primary }]}>{mockUserData.name}, {mockUserData.age}</ThemedText>
+            <TouchableOpacity style={[styles.editButton, { borderColor: theme.primary }]} onPress={handleEditProfile}>
+              <ThemedText style={[styles.editButtonText, { color: theme.primary }]}>Edit Profile</ThemedText>
             </TouchableOpacity>
           </View>
-          <ThemedText style={[styles.userBio, { color: Colors.text.tertiary }]}>{mockUserData.bio}</ThemedText>
+          <ThemedText style={[styles.userBio, { color: theme.text.tertiary }]}>{mockUserData.bio}</ThemedText>
         </View>
 
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
             <LinearGradient
-              colors={[Colors.primary, Colors.primaryLight]}
+              colors={[theme.primary, theme.primaryLight]}
               style={styles.gradientButton}
             >
-              <ThemedText style={[styles.actionButtonText, { color: Colors.text.inverse }]}>Edit Profile</ThemedText>
+              <ThemedText style={[styles.actionButtonText, { color: theme.text.inverse }]}>Edit Profile</ThemedText>
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.secondaryButton, { borderColor: Colors.primary }]} onPress={() => router.push('/home')}>
-            <ThemedText style={[styles.secondaryButtonText, { color: Colors.primary }]}>Back to Swiping</ThemedText>
+          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.primary }]} onPress={() => router.push('/home')}>
+            <ThemedText style={[styles.secondaryButtonText, { color: theme.primary }]}>Back to Swiping</ThemedText>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -150,17 +152,10 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.xl,
     paddingTop: Spacing.md,
   },
-  backButton: {
-    fontSize: Typography.fontSize.xxl,
-    color: Colors.primary,
-  },
   headerTitle: {
     fontSize: Typography.fontSize.xxl,
     fontWeight: Typography.fontWeight.bold,
     paddingTop: Spacing.sm,
-  },
-  settingsButton: {
-    fontSize: Typography.fontSize.xl,
   },
   sectionTitle: {
     fontSize: Typography.fontSize.xl,
@@ -202,7 +197,7 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
   },
   editButton: {
-    backgroundColor: Colors.primarySubtle,
+    backgroundColor: 'transparent',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
     borderRadius: 20,
@@ -260,7 +255,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: 'lightgray',
   },
   tagText: {
     fontSize: Typography.fontSize.xs,
