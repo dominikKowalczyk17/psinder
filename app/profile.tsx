@@ -1,7 +1,7 @@
 import PhotoUpload from '@/components/PhotoUpload';
 import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/contexts/ThemeContext';
 import { Spacing, Typography } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';

@@ -1,18 +1,18 @@
 import { ThemedText } from '@/components/ThemedText';
 import { BorderRadius, Spacing, Typography } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
-import { useTheme } from '@/contexts/ThemeContext';
 
 export default function ProfileSetupScreen() {
   const { theme } = useTheme();

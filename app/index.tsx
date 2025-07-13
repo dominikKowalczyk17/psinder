@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Spacing, Typography } from '@/constants/Theme';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -14,7 +15,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useTheme } from '@/contexts/ThemeContext';
 
 export default function LoginScreen() {
   const { theme } = useTheme();
