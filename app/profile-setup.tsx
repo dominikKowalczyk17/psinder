@@ -1,71 +1,92 @@
-import { ThemedText } from '@/components/ThemedText';
-import { BorderRadius, Spacing, Typography } from '@/constants/Theme';
-import { useTheme } from '@/contexts/ThemeContext';
-import { FontAwesome } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import apiAdapter from "@/api/ApiAdapter";
+import { ThemedText } from "@/components/ThemedText";
+import { BorderRadius, Spacing, Typography } from "@/constants/Theme";
+import { useTheme } from "@/contexts/ThemeContext";
+import { transformProfileDataForApi } from "@/utils/dataTransformers";
+import { FontAwesome } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import React, { useState } from "react";
 import {
-    Alert,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function ProfileSetupScreen() {
   const { theme } = useTheme();
 
   const [userInfo, setUserInfo] = useState({
-    name: '',
-    age: '',
-    bio: '',
+    name: "",
+    password: "",
+    age: "",
+    bio: "",
   });
-  
+
   const [dogInfo, setDogInfo] = useState({
-    name: '',
-    breed: '',
-    age: '',
-    size: 'Medium',
-    energy: 'Medium',
-    bio: '',
+    name: "",
+    breed: "",
+    age: "",
+    size: "Medium",
+    energy: "Medium",
+    bio: "",
   });
 
-  const sizeOptions = ['Small', 'Medium', 'Large'];
-  const energyOptions = ['Low', 'Medium', 'High', 'Very High'];
+  const sizeOptions = ["Small", "Medium", "Large"];
+  const energyOptions = ["Low", "Medium", "High", "Very High"];
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     if (!userInfo.name || !dogInfo.name || !dogInfo.breed) {
-      Alert.alert('Error', 'Please fill in the required fields');
+      Alert.alert("Error", "Please fill in the required fields");
       return;
     }
 
-    Alert.alert(
-      'Profile Complete! 🎉',
-      'Welcome to Psinder! You can now start swiping to find walking buddies for your dog.',
-      [
-        {
-          text: 'Start Swiping',
-          onPress: () => router.replace('/home'),
-        },
-      ]
-    );
+    try {
+      const apiData = transformProfileDataForApi(userInfo, dogInfo);
+
+      await apiAdapter.post("/auth/register", apiData);
+
+      Alert.alert(
+        "Profile Complete! 🎉",
+        "Welcome to Psinder! You can now start swiping to find walking buddies for your dog.",
+        [
+          {
+            text: "Start Swiping",
+            onPress: () => router.replace("/home"),
+          },
+        ]
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("Invalid")) {
+        Alert.alert(
+          "Data Error",
+          "There was a problem with your selection. Please try again."
+        );
+      } else {
+        Alert.alert(
+          "Registration Failed",
+          "Please check your information and try again."
+        );
+      }
+    }
   };
 
   const handleBackToLogin = () => {
     Alert.alert(
-      'Go Back to Login?',
-      'Your profile information will be lost. Are you sure you want to go back?',
+      "Go Back to Login?",
+      "Your profile information will be lost. Are you sure you want to go back?",
       [
         {
-          text: 'Cancel',
-          style: 'cancel',
+          text: "Cancel",
+          style: "cancel",
         },
         {
-          text: 'Go Back',
-          style: 'destructive',
-          onPress: () => router.replace('/'),
+          text: "Go Back",
+          style: "destructive",
+          onPress: () => router.replace("/"),
         },
       ]
     );
@@ -82,7 +103,10 @@ export default function ProfileSetupScreen() {
           key={option}
           style={[
             styles.selectorOption,
-            selected === option && { backgroundColor: theme.primary, borderColor: theme.primary },
+            selected === option && {
+              backgroundColor: theme.primary,
+              borderColor: theme.primary,
+            },
           ]}
           onPress={() => onSelect(option)}
         >
@@ -100,19 +124,35 @@ export default function ProfileSetupScreen() {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background.primary }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.background.primary }]}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header with Back Button */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBackToLogin}>
-            <FontAwesome name="arrow-left" size={16} color={theme.primary} style={{ marginRight: Spacing.sm }} />
-            <ThemedText style={[styles.backButtonText, { color: theme.primary }]}>Back to Login</ThemedText>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={handleBackToLogin}
+          >
+            <FontAwesome
+              name="arrow-left"
+              size={16}
+              color={theme.primary}
+              style={{ marginRight: Spacing.sm }}
+            />
+            <ThemedText
+              style={[styles.backButtonText, { color: theme.primary }]}
+            >
+              Back to Login
+            </ThemedText>
           </TouchableOpacity>
-          
+
           <ThemedText style={[styles.title, { color: theme.text.primary }]}>
             Complete Your Profile
           </ThemedText>
-          <ThemedText style={[styles.subtitle, { color: theme.text.secondary }]}>
+          <ThemedText
+            style={[styles.subtitle, { color: theme.text.secondary }]}
+          >
             Tell us about you and your dog!
           </ThemedText>
         </View>
@@ -120,9 +160,21 @@ export default function ProfileSetupScreen() {
         {/* Profile Photo Section */}
         <View style={styles.photoSection}>
           <TouchableOpacity style={styles.photoContainer}>
-            <View style={[styles.photoPlaceholder, { backgroundColor: theme.primarySubtle, borderColor: theme.primary }]}>
+            <View
+              style={[
+                styles.photoPlaceholder,
+                {
+                  backgroundColor: theme.primarySubtle,
+                  borderColor: theme.primary,
+                },
+              ]}
+            >
               <FontAwesome name="camera" size={32} color={theme.primary} />
-              <ThemedText style={[styles.photoSubtext, { color: theme.primary }]}>Add Photo</ThemedText>
+              <ThemedText
+                style={[styles.photoSubtext, { color: theme.primary }]}
+              >
+                Add Photo
+              </ThemedText>
             </View>
           </TouchableOpacity>
         </View>
@@ -132,11 +184,16 @@ export default function ProfileSetupScreen() {
           <ThemedText type="subtitle" style={styles.sectionTitle}>
             About You
           </ThemedText>
-          
+
           <View style={styles.inputContainer}>
-            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>Your Name *</ThemedText>
+            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>
+              Your Name *
+            </ThemedText>
             <TextInput
-              style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.input,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="Enter your name"
               placeholderTextColor={theme.text.quaternary}
               value={userInfo.name}
@@ -145,9 +202,31 @@ export default function ProfileSetupScreen() {
           </View>
 
           <View style={styles.inputContainer}>
+            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>
+              Your Password *
+            </ThemedText>
+            <TextInput
+              style={[
+                styles.input,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
+              placeholder="Enter your password"
+              placeholderTextColor={theme.text.quaternary}
+              value={userInfo.password}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, password: text })
+              }
+              secureTextEntry
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
             <ThemedText style={styles.label}>Your Age</ThemedText>
             <TextInput
-              style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.input,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="Enter your age"
               placeholderTextColor={theme.text.quaternary}
               value={userInfo.age}
@@ -159,7 +238,10 @@ export default function ProfileSetupScreen() {
           <View style={styles.inputContainer}>
             <ThemedText style={styles.label}>About You</ThemedText>
             <TextInput
-              style={[styles.textArea, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.textArea,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="Tell us about yourself and what you're looking for in a walking buddy..."
               placeholderTextColor={theme.text.quaternary}
               value={userInfo.bio}
@@ -175,11 +257,16 @@ export default function ProfileSetupScreen() {
           <ThemedText type="subtitle" style={styles.sectionTitle}>
             About Your Dog
           </ThemedText>
-          
+
           <View style={styles.inputContainer}>
-            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>Dog&apos;s Name *</ThemedText>
+            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>
+              Dog&apos;s Name *
+            </ThemedText>
             <TextInput
-              style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.input,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="Enter your dog's name"
               placeholderTextColor={theme.text.quaternary}
               value={dogInfo.name}
@@ -188,9 +275,14 @@ export default function ProfileSetupScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>Breed *</ThemedText>
+            <ThemedText style={[styles.label, { color: theme.text.secondary }]}>
+              Breed *
+            </ThemedText>
             <TextInput
-              style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.input,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="e.g., Golden Retriever, Mixed, etc."
               placeholderTextColor={theme.text.quaternary}
               value={dogInfo.breed}
@@ -201,7 +293,10 @@ export default function ProfileSetupScreen() {
           <View style={styles.inputContainer}>
             <ThemedText style={styles.label}>Age</ThemedText>
             <TextInput
-              style={[styles.input, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.input,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="Dog's age in years"
               placeholderTextColor={theme.text.quaternary}
               value={dogInfo.age}
@@ -227,7 +322,10 @@ export default function ProfileSetupScreen() {
           <View style={styles.inputContainer}>
             <ThemedText style={styles.label}>About Your Dog</ThemedText>
             <TextInput
-              style={[styles.textArea, { color: theme.text.primary, borderColor: theme.border.medium }]}
+              style={[
+                styles.textArea,
+                { color: theme.text.primary, borderColor: theme.border.medium },
+              ]}
               placeholder="Describe your dog's personality, favorite activities, walking preferences..."
               placeholderTextColor={theme.text.quaternary}
               value={dogInfo.bio}
@@ -241,19 +339,33 @@ export default function ProfileSetupScreen() {
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           {/* Skip Button */}
-          <TouchableOpacity style={[styles.skipButton, { borderColor: theme.primary }]} onPress={() => router.replace('/home')}>
-            <ThemedText style={[styles.skipButtonText, { color: theme.primary }]}>Skip for Now</ThemedText>
+          <TouchableOpacity
+            style={[styles.skipButton, { borderColor: theme.primary }]}
+            onPress={() => router.replace("/home")}
+          >
+            <ThemedText
+              style={[styles.skipButtonText, { color: theme.primary }]}
+            >
+              Skip for Now
+            </ThemedText>
           </TouchableOpacity>
 
           {/* Complete Profile Button */}
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSaveProfile}
+          >
             <LinearGradient
               colors={[theme.primary, theme.primaryLight]}
               style={styles.gradientButton}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
-              <ThemedText style={[styles.saveButtonText, { color: theme.text.inverse }]}>Complete Profile</ThemedText>
+              <ThemedText
+                style={[styles.saveButtonText, { color: theme.text.inverse }]}
+              >
+                Complete Profile
+              </ThemedText>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -275,9 +387,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
     marginBottom: Spacing.lg,
     paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.xs,
@@ -290,31 +402,31 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.xxxl,
     fontWeight: Typography.fontWeight.bold,
     marginBottom: Spacing.xs,
-    textAlign: 'center',
+    textAlign: "center",
     paddingTop: Spacing.md,
   },
   subtitle: {
     fontSize: Typography.fontSize.base,
-    textAlign: 'center',
+    textAlign: "center",
   },
   photoSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: Spacing.xxxl,
   },
   photoContainer: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   photoPlaceholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    height: "100%",
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 2,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
   },
   photoText: {
     fontSize: Typography.fontSize.huge,
@@ -348,7 +460,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     paddingHorizontal: Spacing.lg,
     fontSize: Typography.fontSize.base,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   textArea: {
     borderWidth: 1,
@@ -356,13 +468,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     fontSize: Typography.fontSize.base,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     minHeight: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   selectorContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.xs,
   },
   selectorOption: {
@@ -370,7 +482,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.xl,
     borderWidth: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   selectorText: {
     fontSize: Typography.fontSize.sm,
@@ -381,11 +493,11 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
     borderRadius: BorderRadius.md,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   skipButtonText: {
     fontSize: Typography.fontSize.base,
@@ -393,12 +505,12 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     borderRadius: BorderRadius.md,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   gradientButton: {
     height: 52,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   saveButtonText: {
     fontSize: Typography.fontSize.base,

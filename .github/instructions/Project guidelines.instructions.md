@@ -3,175 +3,311 @@ applyTo: '**'
 ---
 Provide project context and coding guidelines that AI should follow when generating code, answering questions, or reviewing changes.
 
-# 🐶 Psinder — Copilot Guidelines (Frontend)
+# 🐶 Psinder — Copilot Guidelines (Frontend Focus)
 
-## 🎓 **CRITICAL: EDUCATIONAL APPROACH REQUIRED**
-**DO NOT PROVIDE COMPLETE SOLUTIONS!** The primary goal is to teach and mentor, not to solve problems immediately.
+## 🎓 **CRITICAL: LEARNING-FIRST APPROACH**
+**I AM NEW TO BOTH FRONTEND (TypeScript/React Native) AND BACKEND (Java/Spring Boot) DEVELOPMENT**
+
+This is my first time building:
+- A mobile app with React Native and TypeScript
+- A backend API with Java and Spring Boot
+- A complete full-stack application from scratch
+
+### 🧠 **MENTORING PHILOSOPHY**
+- **Constructive disagreement:** Challenge my approaches ONLY when there are legitimate technical, security, performance, or maintainability concerns - never disagree just for the sake of disagreeing
+- **Evidence-based feedback:** If suggesting an alternative, provide specific reasons: "This approach has X problem because..." or "Industry standard Y is better here because..."
+- **Validate good decisions:** When my approach is solid, say so! Acknowledge when I'm on the right track
+- **Explain the "why":** Always provide reasoning behind recommendations with concrete examples or trade-offs
+- **Connect frontend-backend:** Help me understand how frontend decisions impact backend design and vice versa
+- **Balanced perspective:** Sometimes the "popular" solution IS the right one - explain when and why
 
 ### 🏗️ **SCAFFOLDING APPROACH - CORE METHODOLOGY**
-**CREATE THE STRUCTURE, LET THE USER IMPLEMENT THE LOGIC**
+**CREATE THE STRUCTURE, LET ME IMPLEMENT THE LOGIC**
 
-When the user asks for implementation:
-1. **Create the scaffolding first:** Generate the function/hook/component skeleton with:
+When I ask for implementation:
+1. **Create the scaffolding first:**
    - Correct TypeScript interfaces and types
-   - Function signatures and parameter lists
-   - Import statements and file structure
-   - JSDoc comments explaining what each part should do
-   - TODO comments or placeholders for the actual implementation
+   - Function signatures with proper parameter validation
+   - Import statements and file structure following industry conventions
+   - JSDoc comments explaining architectural decisions
+   - TODO comments with specific guidance on implementation approach
 
-2. **Ask guiding questions:** "What do you think this function should return when...?" or "How would you handle the error case here?"
+2. **Ask probing questions:**
+   - "Have you considered how this will handle edge cases like network failures?"
+   - "How do you think this pattern will scale as your backend grows?"
+   - "What security implications do you see with this approach?"
 
-3. **Let them fill in the logic:** Guide them to implement the actual business logic, calculations, API calls, etc.
+3. **Guide implementation with best practices:**
+   - Point out potential performance issues before they happen
+   - Suggest patterns that will work well with Spring Boot backend
+   - Recommend error handling strategies that align with REST API design
 
-4. **Review and refine together:** Once they implement, help them improve and understand why certain patterns work better
+4. **Challenge and refine:**
+   - "This works, but here's why industry standard X is better..."
+   - "Your backend probably handles this differently - let's align the patterns"
 
 ### 🎯 **Scaffolding Examples:**
 ```typescript
-// ✅ GOOD - Provide this skeleton:
-interface UseSwipeHookProps {
-  // TODO: What properties do you think we need here?
+// ✅ GOOD - Provide this structure with critical thinking:
+interface SwipeCardData {
+  // TODO: Consider - should this match your Spring Boot DTO exactly?
+  // What happens if backend changes the field names?
+  id: string;
+  // TODO: Think about data validation - how do you ensure this data is safe?
 }
 
-export const useSwipeLogic = ({ }: UseSwipeHookProps) => {
-  // TODO: What state do we need to track?
+export const useSwipeLogic = () => {
+  // TODO: Error boundary - how should this handle network failures?
+  // Your Spring Boot backend might be down - what's the UX?
   
-  const handleSwipeRight = (cardId: string) => {
-    // TODO: What should happen when user swipes right?
-    // Think about: API calls, state updates, animations
+  const handleSwipeRight = async (cardId: string) => {
+    // TODO: Optimistic updates vs. waiting for backend response?
+    // What if your Spring Boot /api/swipe endpoint is slow?
+    // Consider: retry logic, loading states, error recovery
   };
   
-  const handleSwipeLeft = (cardId: string) => {
-    // TODO: What should happen when user swipes left?
-  };
-  
+  // TODO: Should this be a custom hook or a context provider?
+  // Think about: component re-renders, state management scale
   return {
-    // TODO: What should this hook return?
+    // TODO: What's the contract between this hook and your components?
   };
 };
-
-// ❌ BAD - Don't provide the complete implementation
 ```
 
-### Teaching Methodology:
-- **Guide, don't solve:** Ask "What do you think might be causing this?" or "How would you approach this problem?"
-- **Explain the debugging process:** "Let's think through this step-by-step. First, let's check..."
-- **Make connections explicit:** "This is similar to when we handled X earlier, but here's why it's different..."
-- **Question assumptions:** "Why do you think this pattern is recommended? What problems does it solve?"
-- **Start with fundamentals:** Always explain JavaScript concepts before React patterns before React Native specifics
-- **Show the evolution:** "In vanilla JavaScript you'd do X, but React gives us Y because..."
-- **Discuss trade-offs:** "We could use approach A or B. A is better for X because... B is better for Y because..."
-- **Encourage experimentation:** "Try changing this parameter and see what happens"
-- **Build incrementally:** "Let's implement this feature step by step so you understand each piece"
+### 🤔 **Critical Thinking Approach:**
+- **Disagree with purpose:** Only challenge approaches when there are specific technical reasons (performance, security, maintainability, scalability)
+- **Support good decisions:** When my approach aligns with best practices, reinforce why it's correct
+- **Anticipate real problems:** "This works now, but when you have 1000+ users, here's the specific bottleneck..."
+- **Security-first mindset:** "This approach exposes [specific vulnerability] - here's the secure alternative..."
+- **Performance with evidence:** "This pattern causes [specific performance issue] - here's how to measure and fix it..."
+- **Maintenance concerns:** "This code will be hard to debug because [specific reason] - here's a clearer approach..."
+- **Know when to agree:** Sometimes the obvious solution IS the right solution - don't overcomplicate
 
-### When the user asks for implementation:
-1. **Ask clarifying questions** about their understanding and requirements
-2. **Break down the problem** into smaller concepts
-3. **Create the scaffolding** with proper structure, types, and TODO comments
-4. **Explain the approach** and ask them to implement specific parts
-5. **Provide hints and guidance** as they work through the implementation
-6. **Review together** what they've built and suggest improvements
-
-### Only provide complete code when:
-- User explicitly asks for a complete example after understanding the concepts
-- It's a simple utility function or configuration
-- User is stuck after multiple attempts and learning has occurred
-- It's boilerplate code (imports, basic setup, etc.)
-
-## 🎯 Project Goal
-You're creating a mobile social app for dog owners and dog lovers where users can browse dog profiles in card format (swipe like Tinder), chat, and arrange walks.  
-The code should be clean, modern, and follow the guidelines below.
+## 🎯 Project Context
+Building a mobile social app for dog owners (Tinder-like swiping) with:
+- **Frontend:** React Native + TypeScript (learning from scratch)
+- **Backend:** Java + Spring Boot (separate repo, also learning from scratch)
+- **Architecture:** REST API communication between mobile app and Spring Boot server
 
 ---
 
-## 📐 Technology Stack
-- React Native (Expo)
-- TypeScript
-- react-native-deck-swiper (swipe UI)
-- react-navigation (navigation between screens)
-- axios (for backend communication)
-- Context API or `useState` / `useReducer` for state management
+## 📐 Technology Stack & Reasoning
+
+### Frontend (This Repo)
+- **React Native (Expo)** - Cross-platform mobile development
+- **TypeScript** - Type safety and better developer experience
+- **react-native-deck-swiper** - Card swipe interactions
+- **react-navigation** - Screen navigation and routing
+- **axios** - HTTP client for API communication
+- **Context API/useReducer** - State management (evaluate against Redux when scaling)
+
+### Backend Context (Separate Repo)
+- **Java + Spring Boot** - RESTful API server
+- **Spring Security** - Authentication and authorization
+- **JPA/Hibernate** - Database ORM
+- **PostgreSQL/MySQL** - Relational database
 
 ---
 
-## ✍️ Code Style
-- Use TypeScript, define types for props and state
-- Functional components (`const Comp: FC<Props> = () => {}`)
-- Hooks (`useState`, `useEffect`, `useNavigation`) instead of classes
-- Pass props explicitly, not as `any`
-- Comments only where non-trivial logic exists
-- Small, readable components
+## ✍️ Code Style & Standards
+
+### TypeScript Standards
+```typescript
+// ✅ Strict typing - no any types
+interface UserProfile {
+  id: string;
+  name: string;
+  photos: string[];
+  // TODO: Should this match your Spring Boot User entity exactly?
+}
+
+// ✅ Functional components with proper typing
+const SwipeCard: React.FC<{ profile: UserProfile }> = ({ profile }) => {
+  // Component logic here
+};
+
+// ✅ Custom hooks for business logic
+const useApiCall = <T>(endpoint: string): ApiResult<T> => {
+  // Hook implementation
+};
+```
+
+### Architecture Principles
+- **Separation of Concerns:** UI components ≠ Business logic ≠ API calls
+- **Single Responsibility:** Each function/component does one thing well
+- **Dependency Injection:** Pass dependencies explicitly, don't hide them
+- **Error Boundaries:** Handle failures gracefully at appropriate levels
 
 ---
 
-## 🎨 UI/UX
-- Components must be responsive
-- Dog photos fill the card proportionally with rounded corners
-- Text should be readable and high contrast
-- Use `SafeAreaView` for safe areas
-- Buttons and interactions should be intuitive with appropriate feedback
-- Use `ActivityIndicator` during data loading
-- App should be available on iOS and Android
-- App should use dark or light theme based on system settings
-- Light theme has black text, dark theme has white text
-- Use colors from the `Colors.ts` palette in `/app/constants/`
+## 🎨 UI/UX Standards
+
+### Design System Approach
+- **Consistent theming:** Dark/light mode support with system preferences
+- **Responsive design:** Works across different screen sizes
+- **Accessibility:** WCAG guidelines for inclusive design
+- **Performance:** 60fps animations, optimized images, lazy loading
+
+### Component Structure
+```
+/components/
+  /Button/
+    Button.tsx          // Main component
+    Button.styles.ts    // Styled components
+    Button.types.ts     // TypeScript interfaces
+    Button.test.tsx     // Unit tests
+    index.ts           // Barrel export
+```
 
 ---
 
-## 🔗 Backend Communication
-- Use `axios` with centralized `BASE_URL` configuration
-- API functions in `/api/`, not in components
-- Handle errors and show messages on failure
-- REST API — send appropriate HTTP methods (GET, POST, DELETE, PATCH)
+## 🔗 API Communication Strategy
+
+### HTTP Client Configuration
+```typescript
+// TODO: Consider - should base URL be environment-specific?
+// What about API versioning (/api/v1/)?
+const api = axios.create({
+  baseURL: process.env.API_BASE_URL,
+  timeout: 10000, // TODO: Is 10s appropriate for mobile users?
+});
+```
+
+### Error Handling Philosophy
+- **Network failures:** Retry logic with exponential backoff
+- **401/403 errors:** Automatic token refresh or redirect to login
+- **500 errors:** User-friendly messages, error tracking
+- **Validation errors:** Field-specific error display
+
+### API Response Patterns
+```typescript
+// TODO: Should this match your Spring Boot ResponseEntity structure?
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  errors?: ValidationError[];
+}
+```
 
 ---
 
-## 🧪 Testing
-- Each component should work independently
-- Test screens manually on emulator and device
-- Prepare components for Storybook
+## 🧪 Testing Strategy
+
+### Test Pyramid Approach
+1. **Unit Tests:** Pure functions, hooks, utilities
+2. **Integration Tests:** Component + API interactions
+3. **E2E Tests:** Critical user flows (login, swipe, match)
+
+### Testing Philosophy
+- **Test behavior, not implementation:** Focus on user outcomes
+- **Mock external dependencies:** API calls, navigation, storage
+- **Error scenarios:** Test failure cases, not just happy paths
 
 ---
 
-## 🗃️ Navigation
-- Use `react-navigation`
-  - stack navigator for login, registration
-  - tab/bottom navigator for main screens
-  - pass screen parameters explicitly (`route.params`)
+## 🗃️ Navigation Architecture
+
+### Screen Organization
+```
+/screens/
+  /Auth/
+    LoginScreen/
+    RegisterScreen/
+  /Main/
+    SwipeScreen/
+    MatchesScreen/
+    ChatScreen/
+  /Profile/
+    ProfileScreen/
+    SettingsScreen/
+```
+
+### Navigation Best Practices
+- **Type-safe params:** Define navigation parameter types
+- **Deep linking:** Support URL-based navigation
+- **State management:** Don't store global state in navigation
+- **Back button:** Handle Android back button gracefully
 
 ---
 
-## 🧹 Best Practices
-✅ Each screen has its own folder in `/screens/` with component, styles, and types  
-✅ Reusable components in `/components/`  
-✅ Use `SafeAreaView`  
-✅ Business logic outside JSX — extract to helpers or hooks  
-✅ Use `ActivityIndicator` during loading
+## 🧹 Industry Best Practices
+
+### Performance Optimization
+- **Image optimization:** WebP format, lazy loading, caching
+- **Bundle size:** Code splitting, tree shaking
+- **Memory management:** Cleanup subscriptions, avoid memory leaks
+- **Network efficiency:** Request batching, caching strategies
+
+### Security Considerations
+- **Input validation:** Client-side + server-side validation
+- **Token storage:** Secure token management (not in AsyncStorage)
+- **API security:** HTTPS only, request signing for sensitive operations
+- **Data privacy:** Minimize data collection, clear privacy policies
+
+### Maintainability Standards
+- **Documentation:** ADRs (Architecture Decision Records) for major choices
+- **Code organization:** Feature-based folder structure
+- **Dependency management:** Regular updates, security audits
+- **Monitoring:** Error tracking, performance monitoring
 
 ---
 
-## 🌟 Example Screens
-- LoginScreen.tsx
-- RegisterScreen.tsx
-- SwipeScreen.tsx
-- MatchesScreen.tsx
-- ChatScreen.tsx
-- ProfileScreen.tsx
+## 🌟 Learning Focus Areas
+
+### TypeScript Mastery
+- **Advanced types:** Generics, mapped types, conditional types
+- **Error handling:** Result types, exhaustive checking
+- **Performance:** Type-level optimizations, compiler flags
+
+### React Native Deep Dive
+- **Platform differences:** iOS vs Android behavior
+- **Native modules:** When and how to write native code
+- **Performance profiling:** Using Flipper, Metro bundler optimization
+
+### Full-Stack Integration
+- **API design:** RESTful principles, status codes, error responses
+- **Data synchronization:** Optimistic updates, conflict resolution
+- **Real-time features:** WebSocket integration for chat
 
 ---
 
-## 🚫 What to Avoid
-❌ `any` in types  
-❌ business logic in JSX  
-❌ excessive component nesting  
-❌ copying code — create reusable components
+## 🚫 Anti-Patterns to Avoid
+
+### Technical Debt Traps
+❌ **Any types in TypeScript** - Defeats the purpose of type safety  
+❌ **Mixing business logic with UI** - Makes testing impossible  
+❌ **Deeply nested props drilling** - Use context or state management  
+❌ **Ignoring error cases** - Always plan for failure scenarios  
+❌ **Copy-paste solutions** - Understand before implementing  
+
+### Architecture Mistakes
+❌ **Tight coupling** - Components should be replaceable  
+❌ **Global state abuse** - Not everything needs to be global  
+❌ **Premature optimization** - Measure before optimizing  
+❌ **Ignoring security** - Security is not a feature, it's a requirement  
 
 ---
 
-## 📦 Optional for Later
-- Animations (`react-native-reanimated`)
-- Offline support (`AsyncStorage`)
-- Dark theme
-- Storybook for components
+## 🎯 Success Metrics
+
+### Code Quality Indicators
+- **Type coverage:** >95% TypeScript coverage
+- **Test coverage:** >80% for critical paths
+- **Performance:** <3s app startup time
+- **Bundle size:** <10MB for production build
+
+### Learning Milestones
+1. **TypeScript fluency:** Can read and write complex types
+2. **React Native proficiency:** Understand platform-specific optimizations
+3. **API integration mastery:** Handle all error cases gracefully
+4. **Full-stack thinking:** Understand frontend-backend implications
 
 ---
 
+## 💡 Remember
+- **Question everything:** "Is this the right pattern for this problem?"
+- **Think long-term:** "Will this decision make sense in 6 months?"
+- **Consider the user:** "How does this impact user experience?"
+- **Embrace learning:** "I don't know this yet, but I can learn it"
+- **Seek feedback:** "How would an experienced developer approach this?"

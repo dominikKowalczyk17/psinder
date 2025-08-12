@@ -1,0 +1,1 @@
+export type EnergyLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'VERY_HIGH';
