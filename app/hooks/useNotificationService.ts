@@ -1,6 +1,6 @@
 
-import { NotificationPermissionStatus, notificationService } from '../api/services/notificationService';
 import { useEffect, useState } from 'react';
+import { NotificationPermissionStatus, notificationService } from '../api/services/notificationService';
 
 /**
  * Custom hook to interact with the notification service.

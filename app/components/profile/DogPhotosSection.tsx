@@ -1,8 +1,8 @@
-import PhotoUpload from '../forms/PhotoUpload';
-import { ThemedText } from '../ui/ThemedText';
-import { useTheme } from '../../stores/ThemeContext';
-import React from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import React from "react";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { useTheme } from "../../stores/ThemeContext";
+import PhotoUpload from "../forms/PhotoUpload";
+import { ThemedText } from "../ui/ThemedText";
 
 interface DogPhotosSectionProps {
   dogName: string;
@@ -10,12 +10,22 @@ interface DogPhotosSectionProps {
   onAddPhoto: (uri: string) => void;
 }
 
-export const DogPhotosSection: React.FC<DogPhotosSectionProps> = ({ dogName, dogPhotos, onAddPhoto }) => {
+export const DogPhotosSection: React.FC<DogPhotosSectionProps> = ({
+  dogName,
+  dogPhotos,
+  onAddPhoto,
+}) => {
   const { theme } = useTheme();
   return (
     <View style={styles.dogPhotosSection}>
-      <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>Meet {dogName}</ThemedText>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosScroll}>
+      <ThemedText style={[styles.sectionTitle, { color: theme.text.primary }]}>
+        Meet {dogName}
+      </ThemedText>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.photosScroll}
+      >
         {dogPhotos.map((photo, index) => (
           <Image key={index} source={{ uri: photo }} style={styles.dogPhoto} />
         ))}
@@ -36,12 +46,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
     paddingTop: 12,
   },
   photosScroll: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 16,
   },
   dogPhoto: {

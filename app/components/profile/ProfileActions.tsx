@@ -1,15 +1,18 @@
-import { ThemedText } from '../ui/ThemedText';
-import { useTheme } from '../../stores/ThemeContext';
-import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useTheme } from "../../stores/ThemeContext";
+import { ThemedText } from "../ui/ThemedText";
 
 interface ProfileActionsProps {
   onEdit: () => void;
   onBackToSwiping: () => void;
 }
 
-export const ProfileActions: React.FC<ProfileActionsProps> = ({ onEdit, onBackToSwiping }) => {
+export const ProfileActions: React.FC<ProfileActionsProps> = ({
+  onEdit,
+  onBackToSwiping,
+}) => {
   const { theme } = useTheme();
   return (
     <View style={styles.actionsContainer}>
@@ -18,11 +21,22 @@ export const ProfileActions: React.FC<ProfileActionsProps> = ({ onEdit, onBackTo
           colors={[theme.primary, theme.primaryLight]}
           style={styles.gradientButton}
         >
-          <ThemedText style={[styles.actionButtonText, { color: theme.text.inverse }]}>Edit Profile</ThemedText>
+          <ThemedText
+            style={[styles.actionButtonText, { color: theme.text.inverse }]}
+          >
+            Edit Profile
+          </ThemedText>
         </LinearGradient>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.primary }]} onPress={onBackToSwiping}>
-        <ThemedText style={[styles.secondaryButtonText, { color: theme.primary }]}>Back to Swiping</ThemedText>
+      <TouchableOpacity
+        style={[styles.secondaryButton, { borderColor: theme.primary }]}
+        onPress={onBackToSwiping}
+      >
+        <ThemedText
+          style={[styles.secondaryButtonText, { color: theme.primary }]}
+        >
+          Back to Swiping
+        </ThemedText>
       </TouchableOpacity>
     </View>
   );
@@ -36,27 +50,27 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   gradientButton: {
     height: 52,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   actionButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   secondaryButton: {
     height: 52,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
     borderRadius: 12,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   secondaryButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

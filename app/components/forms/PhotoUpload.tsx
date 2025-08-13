@@ -1,16 +1,16 @@
-import { useTheme } from '../../stores/ThemeContext';
-import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import * as ImagePicker from "expo-image-picker";
+import React, { useState } from "react";
 import {
-    ActionSheetIOS,
-    Alert,
-    Image,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import { ThemedText } from '../ui/ThemedText';
+  ActionSheetIOS,
+  Alert,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useTheme } from "../../stores/ThemeContext";
+import { ThemedText } from "../ui/ThemedText";
 
 interface PhotoUploadProps {
   onPhotoSelected: (uri: string) => void;
@@ -19,24 +19,26 @@ interface PhotoUploadProps {
   label?: string;
 }
 
-export default function PhotoUpload({ 
-  onPhotoSelected, 
-  currentPhoto, 
+export default function PhotoUpload({
+  onPhotoSelected,
+  currentPhoto,
   style,
-  label = 'Add Photo' 
+  label = "Add Photo",
 }: PhotoUploadProps) {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
 
   const requestPermissions = async () => {
-    const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
-    const { status: libraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (cameraStatus !== 'granted' || libraryStatus !== 'granted') {
+    const { status: cameraStatus } =
+      await ImagePicker.requestCameraPermissionsAsync();
+    const { status: libraryStatus } =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (cameraStatus !== "granted" || libraryStatus !== "granted") {
       Alert.alert(
-        'Permissions Required',
-        'Please grant camera and photo library permissions to upload photos.',
-        [{ text: 'OK' }]
+        "Permissions Required",
+        "Please grant camera and photo library permissions to upload photos.",
+        [{ text: "OK" }]
       );
       return false;
     }
@@ -68,18 +70,18 @@ export default function PhotoUpload({
         onPhotoSelected(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Photo selection error:', error);
-      Alert.alert('Error', 'Failed to select photo. Please try again.');
+      console.error("Photo selection error:", error);
+      Alert.alert("Error", "Failed to select photo. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const showPhotoOptions = () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       ActionSheetIOS.showActionSheetWithOptions(
         {
-          options: ['Cancel', 'Take Photo', 'Choose from Library'],
+          options: ["Cancel", "Take Photo", "Choose from Library"],
           cancelButtonIndex: 0,
         },
         (buttonIndex) => {
@@ -91,15 +93,11 @@ export default function PhotoUpload({
         }
       );
     } else {
-      Alert.alert(
-        'Select Photo',
-        'Choose how you want to add a photo',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Take Photo', onPress: () => selectPhoto(true) },
-          { text: 'Choose from Library', onPress: () => selectPhoto(false) },
-        ]
-      );
+      Alert.alert("Select Photo", "Choose how you want to add a photo", [
+        { text: "Cancel", style: "cancel" },
+        { text: "Take Photo", onPress: () => selectPhoto(true) },
+        { text: "Choose from Library", onPress: () => selectPhoto(false) },
+      ]);
     }
   };
 
@@ -113,18 +111,28 @@ export default function PhotoUpload({
         <View style={styles.photoContainer}>
           <Image source={{ uri: currentPhoto }} style={styles.photo} />
           <View style={styles.overlay}>
-            <ThemedText style={[styles.changeText, { color: theme.text.inverse }]}>
-              {isLoading ? 'Loading...' : 'Change Photo'}
+            <ThemedText
+              style={[styles.changeText, { color: theme.text.inverse }]}
+            >
+              {isLoading ? "Loading..." : "Change Photo"}
             </ThemedText>
           </View>
         </View>
       ) : (
-        <View style={[styles.addPhotoContainer, { borderColor: theme.primary, backgroundColor: `${theme.primary}10` }] }>
+        <View
+          style={[
+            styles.addPhotoContainer,
+            {
+              borderColor: theme.primary,
+              backgroundColor: `${theme.primary}10`,
+            },
+          ]}
+        >
           <ThemedText style={[styles.addPhotoText, { color: theme.primary }]}>
-            {isLoading ? '⏳' : '+'}
+            {isLoading ? "⏳" : "+"}
           </ThemedText>
           <ThemedText style={[styles.addPhotoLabel, { color: theme.primary }]}>
-            {isLoading ? 'Loading...' : label}
+            {isLoading ? "Loading..." : label}
           </ThemedText>
         </View>
       )}
@@ -137,37 +145,37 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   photoContainer: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   photo: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   changeText: {
     fontSize: 12,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   addPhotoContainer: {
     flex: 1,
     borderWidth: 2,
-    borderStyle: 'dashed',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
   },
   addPhotoText: {
     fontSize: 32,
@@ -175,7 +183,7 @@ const styles = StyleSheet.create({
   },
   addPhotoLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
 });

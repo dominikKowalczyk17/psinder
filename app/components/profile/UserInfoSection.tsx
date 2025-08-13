@@ -1,7 +1,7 @@
-import { ThemedText } from '../ui/ThemedText';
-import { useTheme } from '../../stores/ThemeContext';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { useTheme } from "../../stores/ThemeContext";
+import { ThemedText } from "../ui/ThemedText";
 
 interface UserInfoSectionProps {
   name: string;
@@ -10,14 +10,23 @@ interface UserInfoSectionProps {
   onEdit: () => void;
 }
 
-export const UserInfoSection: React.FC<UserInfoSectionProps> = ({ name, age, bio, onEdit }) => {
+export const UserInfoSection: React.FC<UserInfoSectionProps> = ({
+  name,
+  age,
+  bio,
+  onEdit,
+}) => {
   const { theme } = useTheme();
   return (
     <View style={styles.infoSection}>
       <View style={styles.nameSection}>
-        <ThemedText style={[styles.userName, { color: theme.text.primary }]}>{name}, {age}</ThemedText>
+        <ThemedText style={[styles.userName, { color: theme.text.primary }]}>
+          {name}, {age}
+        </ThemedText>
       </View>
-      <ThemedText style={[styles.userBio, { color: theme.text.tertiary }]}>{bio}</ThemedText>
+      <ThemedText style={[styles.userBio, { color: theme.text.tertiary }]}>
+        {bio}
+      </ThemedText>
     </View>
   );
 };
@@ -28,18 +37,18 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   nameSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   userName: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingTop: 12,
   },
   editButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -47,7 +56,7 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   userBio: {
     fontSize: 16,
