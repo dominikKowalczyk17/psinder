@@ -1,8 +1,8 @@
 
-import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '../../stores/ThemeContext';
 import React, { useRef, useState } from 'react';
 import { Animated, Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ThemedText } from '../ui/ThemedText';
 
 interface MatchModalProps {
   visible: boolean;

@@ -1,7 +1,7 @@
-import { CreateDogRequest } from '@/entities/Dog';
-import { CreateUserRequest } from '@/entities/User';
-import { EnergyLevel } from '@/types/energyLevelType';
-import { Size } from '@/types/sizeType';
+import { CreateDogRequest } from '../../types/Dog';
+import { CreateUserRequest } from '../../types/User';
+import { EnergyLevel } from '../../types/energyLevelType';
+import { Size } from '../../types/sizeType';
 
 /**
  * Data transformation utilities for API communication

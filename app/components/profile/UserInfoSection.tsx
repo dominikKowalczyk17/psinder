@@ -1,5 +1,5 @@
-import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/contexts/ThemeContext';
+import { ThemedText } from '../ui/ThemedText';
+import { useTheme } from '../../stores/ThemeContext';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 

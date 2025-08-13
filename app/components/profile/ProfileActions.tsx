@@ -1,5 +1,5 @@
-import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/contexts/ThemeContext';
+import { ThemedText } from '../ui/ThemedText';
+import { useTheme } from '../../stores/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';

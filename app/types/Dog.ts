@@ -1,5 +1,5 @@
-import { EnergyLevel } from "@/types/energyLevelType";
-import { Size } from "@/types/sizeType";
+import { EnergyLevel } from "./energyLevelType";
+import { Size } from "./sizeType";
 
 export interface Dog {
   id?: number;

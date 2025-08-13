@@ -1,16 +1,16 @@
-import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '../../stores/ThemeContext';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
-  ActionSheetIOS,
-  Alert,
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
+    ActionSheetIOS,
+    Alert,
+    Image,
+    Platform,
+    StyleSheet,
+    TouchableOpacity,
+    View,
 } from 'react-native';
+import { ThemedText } from '../ui/ThemedText';
 
 interface PhotoUploadProps {
   onPhotoSelected: (uri: string) => void;

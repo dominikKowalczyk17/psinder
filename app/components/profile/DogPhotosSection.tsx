@@ -1,6 +1,6 @@
-import PhotoUpload from '@/components/PhotoUpload';
-import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/contexts/ThemeContext';
+import PhotoUpload from '../forms/PhotoUpload';
+import { ThemedText } from '../ui/ThemedText';
+import { useTheme } from '../../stores/ThemeContext';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 

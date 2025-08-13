@@ -4,7 +4,7 @@
  */
 
 
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '../stores/ThemeContext';
 
 export function useThemeColor(
   props: { light?: string; dark?: string },

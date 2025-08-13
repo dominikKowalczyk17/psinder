@@ -1,5 +1,5 @@
 
-import { NotificationPermissionStatus, notificationService } from '@/services/notificationService';
+import { NotificationPermissionStatus, notificationService } from '../api/services/notificationService';
 import { useEffect, useState } from 'react';
 
 /**
