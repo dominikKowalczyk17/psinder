@@ -3,9 +3,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import type { Message } from "../../api/types/chat";
 import { ThemedText } from '../../components/ui/ThemedText';
-import { useTheme } from '../../stores/ThemeContext';
-import type { Message } from '../../types/chat';
+import { useTheme } from "../../stores/ThemeContext";
 
 const ChatScreen: React.FC = () => {
   const { theme } = useTheme();

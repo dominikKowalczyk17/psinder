@@ -1,32 +1,37 @@
+import {
+  FormDogInfo,
+  FormUserInfo,
+  transformProfileDataForApi,
+} from "@/app/api/transformers/dataTransformers";
+import { useAuth } from "@/app/hooks/useAuth";
 import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-    Alert,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import apiAdapter from "../../api/client/ApiAdapter";
-import { transformProfileDataForApi } from "../../api/transformers/dataTransformers";
 import { ThemedText } from "../../components/ui/ThemedText";
 import { BorderRadius, Spacing, Typography } from "../../constants/Theme";
 import { useTheme } from "../../stores/ThemeContext";
 
 export default function ProfileSetupScreen() {
   const { theme } = useTheme();
+  const { register, isLoading, error } = useAuth();
 
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<FormUserInfo>({
     name: "",
     password: "",
     age: "",
     bio: "",
   });
 
-  const [dogInfo, setDogInfo] = useState({
+  const [dogInfo, setDogInfo] = useState<FormDogInfo>({
     name: "",
     breed: "",
     age: "",
@@ -46,9 +51,7 @@ export default function ProfileSetupScreen() {
 
     try {
       const apiData = transformProfileDataForApi(userInfo, dogInfo);
-
-      await apiAdapter.post("/auth/register", apiData);
-
+      register(apiData);
       Alert.alert(
         "Profile Complete! 🎉",
         "Welcome to Psinder! You can now start swiping to find walking buddies for your dog.",
@@ -60,17 +63,10 @@ export default function ProfileSetupScreen() {
         ]
       );
     } catch (error) {
-      if (error instanceof Error && error.message.includes("Invalid")) {
-        Alert.alert(
-          "Data Error",
-          "There was a problem with your selection. Please try again."
-        );
-      } else {
-        Alert.alert(
-          "Registration Failed",
-          "Please check your information and try again."
-        );
-      }
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Registration failed"
+      );
     }
   };
 

@@ -1,5 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import {
+  AuthControllerApi,
+  DogControllerApi,
+  UserControllerApi
+} from '../generated';
+import { Configuration } from '../generated/configuration';
 
 interface ApiAdapterConfig {
   baseURL: string;
@@ -15,7 +21,14 @@ interface ApiError {
 export class ApiAdapter {
   private axiosInstance: AxiosInstance;
   private authToken: string | null = null;
+  private isRefreshing = false;
+  private failedQueue: { resolve: Function; reject: Function }[] = [];
   private readonly TOKEN_KEY = 'psinder_jwt_token';
+  
+  // Generated API clients
+  public auth: AuthControllerApi;
+  public dogs: DogControllerApi;
+  public users: UserControllerApi;
 
   constructor(config: ApiAdapterConfig) {
     this.axiosInstance = axios.create({
@@ -26,34 +39,23 @@ export class ApiAdapter {
       }
     });
 
-    this.setupRequestInterceptors();
-    this.setupResponseInterceptors();
-    
+    this.setupInterceptors();
     this.loadStoredToken();
+    
+    // Initialize generated API clients with configured axios instance
+    const configuration = new Configuration({
+      basePath: config.baseURL,
+      accessToken: () => this.authToken || ''
+    });
+    
+    this.auth = new AuthControllerApi(configuration, config.baseURL, this.axiosInstance);
+    this.dogs = new DogControllerApi(configuration, config.baseURL, this.axiosInstance);
+    this.users = new UserControllerApi(configuration, config.baseURL, this.axiosInstance);
   }
 
-  /**
-   * Load JWT token from secure storage on app startup
-   * TODO: Should we validate the token with backend or just assume it's valid?
-   */
-  private async loadStoredToken(): Promise<void> {
-    try {
-      const storedToken = await SecureStore.getItemAsync(this.TOKEN_KEY);
-      if (storedToken) {
-        this.authToken = storedToken;
-        // TODO: Should we validate token with backend here?
-        // What if it's expired? Should we auto-refresh?
-      }
-    } catch (error) {
-      // TODO: How should we handle SecureStore errors?
-      console.error('Failed to load stored token:', error);
-    }
-  }
-
-  private setupRequestInterceptors(): void {
+  private setupInterceptors(): void {
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        // Only add auth token to protected endpoints
         if (this.authToken && !this.isAuthEndpoint(config.url || '')) {
           config.headers.Authorization = `Bearer ${this.authToken}`;
         }
@@ -66,9 +68,7 @@ export class ApiAdapter {
       },
       (error) => Promise.reject(error)
     );
-  }
 
-  private setupResponseInterceptors(): void {
     this.axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => {
         if (__DEV__) {
@@ -76,13 +76,47 @@ export class ApiAdapter {
         }
         return response;
       },
-      (error) => {
+      async (error) => {
+        const originalRequest = error.config;
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          if (this.isRefreshing) {
+            return new Promise((resolve, reject) => {
+              this.failedQueue.push({ resolve, reject });
+            }).then(token => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              return this.axiosInstance(originalRequest);
+            });
+          }
+
+          originalRequest._retry = true;
+          this.isRefreshing = true;
+
+          try {
+            // TODO: Implement refresh token logic when your backend supports it
+            await this.clearAuthToken();
+            throw new Error('Session expired. Please login again.');
+          } catch (refreshError) {
+            this.processQueue(refreshError, null);
+            throw refreshError;
+          } finally {
+            this.isRefreshing = false;
+          }
+        }
+
         if (__DEV__) {
           console.error(`API Error:`, error.response?.status, error.response?.data);
         }
         return Promise.reject(this.handleError(error));
       }
     );
+  }
+
+  private processQueue(error: any, token: string | null) {
+    this.failedQueue.forEach(({ resolve, reject }) => {
+      error ? reject(error) : resolve(token);
+    });
+    this.failedQueue = [];
   }
 
   private isAuthEndpoint(url: string): boolean {
@@ -145,33 +179,26 @@ export class ApiAdapter {
     }
   }
 
-  async post<T>(endpoint: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.axiosInstance.post(endpoint, data, config);
-    return response.data;
+  private async loadStoredToken(): Promise<void> {
+    try {
+      const storedToken = await SecureStore.getItemAsync(this.TOKEN_KEY);
+      if (storedToken) {
+        this.authToken = storedToken;
+      }
+    } catch (error) {
+      console.error('Failed to load stored token:', error);
+    }
   }
 
-  async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.axiosInstance.get(endpoint, config);
-    return response.data;
-  }
-
-  /**
-   * Store JWT token securely and update instance
-   * TODO: Should we also store token expiration time?
-   */
   async setAuthToken(token: string): Promise<void> {
     this.authToken = token;
     try {
       await SecureStore.setItemAsync(this.TOKEN_KEY, token);
     } catch (error) {
       console.error('Failed to store token securely:', error);
-      // TODO: Should we fallback to AsyncStorage or fail completely?
     }
   }
 
-  /**
-   * Clear JWT token from memory and storage
-   */
   async clearAuthToken(): Promise<void> {
     this.authToken = null;
     try {
@@ -185,17 +212,14 @@ export class ApiAdapter {
     return this.authToken;
   }
 
-  /**
-   * Check if user is currently authenticated
-   * TODO: Should this also validate token expiration?
-   */
   isAuthenticated(): boolean {
     return this.authToken !== null;
   }
 }
 
+// Create singleton instance
 const apiAdapter = new ApiAdapter({
-  baseURL: 'http://192.168.0.185:8080/api',
+  baseURL: 'http://192.168.0.185:8080',
   timeout: 10000,
 });
 
