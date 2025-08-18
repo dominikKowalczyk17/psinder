@@ -14,28 +14,30 @@ import {
 } from "react-native";
 import { ThemedText } from "./components/ui/ThemedText";
 import { Spacing, Typography } from "./constants/Theme";
+import { useAuth } from "./hooks/useAuth";
 import { useTheme } from "./stores/ThemeContext";
 
 export default function LoginScreen() {
   const { theme } = useTheme();
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading: authLoading, error } = useAuth();
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!name || !password) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
-    setIsLoading(true);
-
-    // Simulate login API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Navigate to home screen on successful login
+    try {
+      await login({ name, password });
       router.replace("/home");
-    }, 1500);
+    } catch (error) {
+      Alert.alert(
+        "Login failed",
+        error instanceof Error ? error.message : "Please check your credentials"
+      );
+    }
   };
 
   const handleSignUp = () => {
@@ -79,11 +81,10 @@ export default function LoginScreen() {
                       borderColor: theme.border.medium,
                     },
                   ]}
-                  placeholder="Email"
+                  placeholder="Username"
                   placeholderTextColor={theme.text.quaternary}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
+                  value={name}
+                  onChangeText={setName}
                   autoCapitalize="none"
                   autoCorrect={false}
                 />
@@ -123,10 +124,10 @@ export default function LoginScreen() {
               <TouchableOpacity
                 style={[
                   styles.loginButton,
-                  isLoading && styles.loginButtonDisabled,
+                  authLoading && styles.loginButtonDisabled,
                 ]}
                 onPress={handleLogin}
-                disabled={isLoading}
+                disabled={authLoading}
               >
                 <LinearGradient
                   colors={[theme.primary, theme.primaryLight]}
@@ -140,7 +141,7 @@ export default function LoginScreen() {
                       { color: theme.text.inverse },
                     ]}
                   >
-                    {isLoading ? "Signing In..." : "Sign In"}
+                    {authLoading ? "Signing In..." : "Sign In"}
                   </ThemedText>
                 </LinearGradient>
               </TouchableOpacity>

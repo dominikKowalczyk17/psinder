@@ -1,10 +1,11 @@
 # AuthControllerApi
 
-All URIs are relative to *http://192.168.0.185:8080*
+All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**login**](#login) | **POST** /api/auth/login | |
+|[**refreshToken**](#refreshtoken) | **POST** /api/auth/refresh | |
 |[**register**](#register) | **POST** /api/auth/register | |
 
 # **login**
@@ -35,6 +36,57 @@ const { status, data } = await apiInstance.login(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **loginRequest** | **LoginRequest**|  | |
+
+
+### Return type
+
+**AuthResponse**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **refreshToken**
+> AuthResponse refreshToken(refreshTokenRequest)
+
+
+### Example
+
+```typescript
+import {
+    AuthControllerApi,
+    Configuration,
+    RefreshTokenRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AuthControllerApi(configuration);
+
+let refreshTokenRequest: RefreshTokenRequest; //
+
+const { status, data } = await apiInstance.refreshToken(
+    refreshTokenRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **refreshTokenRequest** | **RefreshTokenRequest**|  | |
 
 
 ### Return type
