@@ -1,25 +1,19 @@
-# AuthResponse
+# RefreshTokenRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**accessToken** | **string** |  | [optional] [default to undefined]
 **refreshToken** | **string** |  | [optional] [default to undefined]
-**expiresIn** | **number** |  | [optional] [default to undefined]
-**refreshExpiresIn** | **number** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { AuthResponse } from './api';
+import { RefreshTokenRequest } from './api';
 
-const instance: AuthResponse = {
-    accessToken,
+const instance: RefreshTokenRequest = {
     refreshToken,
-    expiresIn,
-    refreshExpiresIn,
 };
 ```
 

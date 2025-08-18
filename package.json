@@ -9,7 +9,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "generate-types": "openapi-generator-cli generate -g typescript-axios -i http://192.168.0.185:8080/v3/api-docs -o app/api/generated"
+    "generate-types": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs -o app/api/generated"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",

@@ -21,10 +21,12 @@ interface ApiError {
 export class ApiAdapter {
   private axiosInstance: AxiosInstance;
   private authToken: string | null = null;
+  private refreshToken: string | null = null;
   private isRefreshing = false;
   private failedQueue: { resolve: Function; reject: Function }[] = [];
   private readonly TOKEN_KEY = 'psinder_jwt_token';
-  
+  private readonly REFRESH_TOKEN_KEY = 'psinder_refresh_token';
+
   // Generated API clients
   public auth: AuthControllerApi;
   public dogs: DogControllerApi;
@@ -93,12 +95,13 @@ export class ApiAdapter {
           this.isRefreshing = true;
 
           try {
-            // TODO: Implement refresh token logic when your backend supports it
-            await this.clearAuthToken();
-            throw new Error('Session expired. Please login again.');
+            const newToken = await this.refreshTokens();
+            this.processQueue(null, newToken);
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
           } catch (refreshError) {
+            await this.clearAuthToken();
             this.processQueue(refreshError, null);
-            throw refreshError;
+            throw new Error('Session expired. Please login again.');
           } finally {
             this.isRefreshing = false;
           }
@@ -181,9 +184,17 @@ export class ApiAdapter {
 
   private async loadStoredToken(): Promise<void> {
     try {
-      const storedToken = await SecureStore.getItemAsync(this.TOKEN_KEY);
+      const [storedToken, storedRefreshToken] = await Promise.all([
+        SecureStore.getItemAsync(this.TOKEN_KEY),
+        SecureStore.getItemAsync(this.REFRESH_TOKEN_KEY)
+      ]);
+
       if (storedToken) {
         this.authToken = storedToken;
+      }
+
+      if (storedRefreshToken) {
+        this.refreshToken = storedRefreshToken;
       }
     } catch (error) {
       console.error('Failed to load stored token:', error);
@@ -201,19 +212,56 @@ export class ApiAdapter {
 
   async clearAuthToken(): Promise<void> {
     this.authToken = null;
+    this.refreshToken = null;
     try {
       await SecureStore.deleteItemAsync(this.TOKEN_KEY);
+      await SecureStore.deleteItemAsync(this.REFRESH_TOKEN_KEY);
     } catch (error) {
       console.error('Failed to clear stored token:', error);
     }
+  }
+
+  private async refreshTokens(): Promise<string> {
+    const refreshToken = this.getRefreshToken();
+
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    const response = await this.auth.refreshToken({ refreshToken });
+
+    if (!response.data.accessToken) {
+      throw new Error('No access token received from refresh');
+    }
+
+    await this.setAuthToken(response.data.accessToken);
+
+    if (response.data.refreshToken) {
+      await this.setRefreshToken(response.data.refreshToken);
+    }
+
+    return response.data.accessToken;
   }
 
   getAuthToken(): string | null {
     return this.authToken;
   }
 
+  getRefreshToken(): string | null {
+    return this.refreshToken;
+  }
+
   isAuthenticated(): boolean {
     return this.authToken !== null;
+  }
+
+  async setRefreshToken(token: string): Promise<void> {
+    this.refreshToken = token;
+    try {
+      await SecureStore.setItemAsync(this.REFRESH_TOKEN_KEY, token);
+    } catch (error) {
+      console.error('Failed to store refresh token securely: ', error)
+    }
   }
 }
 

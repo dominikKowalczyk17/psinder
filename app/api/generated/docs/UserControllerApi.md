@@ -1,6 +1,6 @@
 # UserControllerApi
 
-All URIs are relative to *http://192.168.0.185:8080*
+All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|

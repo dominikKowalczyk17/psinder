@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 api.ts
 base.ts
 common.ts
@@ -12,6 +11,7 @@ docs/CreateUserRequest.md
 docs/DogControllerApi.md
 docs/DogDto.md
 docs/LoginRequest.md
+docs/RefreshTokenRequest.md
 docs/UserControllerApi.md
 docs/UserDto.md
 git_push.sh

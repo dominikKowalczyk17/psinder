@@ -6,8 +6,12 @@ export class UserService {
   static async login(credentials: LoginRequest): Promise<AuthResponse> {
     const response = await apiAdapter.auth.login(credentials);
     
-    if (response.data.token) {
-      await apiAdapter.setAuthToken(response.data.token);
+    if (response.data.accessToken) {
+      await apiAdapter.setAuthToken(response.data.accessToken);
+    }
+
+    if (response.data.refreshToken) {
+      await apiAdapter.setRefreshToken(response.data.refreshToken);
     }
     
     return response.data;
