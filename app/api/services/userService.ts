@@ -40,4 +40,10 @@ export class UserService {
   static async deleteUser(id: number): Promise<void> {
     await apiAdapter.users.deleteUser(id);
   }
+
+  static async logout(): Promise<{ [key: string]: string }> {
+    const response = await apiAdapter.auth.logout();
+    await apiAdapter.clearAuthToken();
+    return response.data;
+  }
 }

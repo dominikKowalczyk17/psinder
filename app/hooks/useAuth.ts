@@ -11,8 +11,6 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginRequest) => UserService.login(credentials),
     onSuccess: (response) => {
-      // Note: Your backend's login only returns AuthResponse with token
-      // You'll need to fetch user data separately or modify backend to return user data
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
@@ -30,13 +28,13 @@ export const useAuth = () => {
 
   const logout = async () => {
     clearUser();
-    // await UserService.logout(); // implement this
+    await UserService.logout(); 
     queryClient.clear();
   };
 
   return {
-    login: loginMutation.mutate,
-    register: registerMutation.mutate,
+    login: loginMutation.mutateAsync,
+    register: registerMutation.mutateAsync,
     logout,
     isLoading: loginMutation.isPending || registerMutation.isPending,
     error: loginMutation.error || registerMutation.error
